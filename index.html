@@ -1,0 +1,7221 @@
+<!DOCTYPE html> 
+
+<html lang="en"> 
+
+<head> 
+
+    <meta charset="UTF-8"> 
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+
+    <title>Cyber Basics: Hacker POV - Educational Simulation</title> 
+
+    <style> 
+
+        /* ============================================ 
+
+           DESIGN SYSTEM & CSS VARIABLES 
+
+           ============================================ */ 
+
+        :root { 
+
+            /* Core Colors */ 
+
+            --bg-dark: #0a0e17; 
+
+            --bg-panel: #111827; 
+
+            --bg-card: #1f2937; 
+
+            --bg-elevated: #374151; 
+
+             
+
+            /* Neon Accents */ 
+
+            --neon-cyan: #00f0ff; 
+
+            --neon-green: #00ff88; 
+
+            --neon-pink: #ff0080; 
+
+            --neon-yellow: #ffdd00; 
+
+            --neon-orange: #ff6b35; 
+
+             
+
+            /* Text */ 
+
+            --text-primary: #f3f4f6; 
+
+            --text-secondary: #9ca3af; 
+
+            --text-muted: #6b7280; 
+
+             
+
+            /* Semantic */ 
+
+            --success: #10b981; 
+
+            --warning: #f59e0b; 
+
+            --error: #ef4444; 
+
+            --info: #3b82f6; 
+
+             
+
+            /* Spacing */ 
+
+            --space-xs: 0.25rem; 
+
+            --space-sm: 0.5rem; 
+
+            --space-md: 1rem; 
+
+            --space-lg: 1.5rem; 
+
+            --space-xl: 2rem; 
+
+            --space-2xl: 3rem; 
+
+             
+
+            /* Typography */ 
+
+            --font-mono: 'Courier New', Consolas, monospace; 
+
+            --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+
+             
+
+            /* Borders & Shadows */ 
+
+            --border-radius: 8px; 
+
+            --border-radius-lg: 12px; 
+
+            --shadow-glow: 0 0 20px rgba(0, 240, 255, 0.3); 
+
+            --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.4); 
+
+        } 
+
+  
+
+        /* ============================================ 
+
+           RESET & BASE STYLES 
+
+           ============================================ */ 
+
+        *, *::before, *::after { 
+
+            box-sizing: border-box; 
+
+            margin: 0; 
+
+            padding: 0; 
+
+        } 
+
+  
+
+        html, body { 
+
+            height: 100%; 
+
+            overflow: hidden; 
+
+        } 
+
+  
+
+        body { 
+
+            font-family: var(--font-sans); 
+
+            background: var(--bg-dark); 
+
+            color: var(--text-primary); 
+
+            line-height: 1.6; 
+
+        } 
+
+  
+
+        /* ============================================ 
+
+           LAYOUT 
+
+           ============================================ */ 
+
+        .app-container { 
+
+            display: flex; 
+
+            height: 100vh; 
+
+            overflow: hidden; 
+
+        } 
+
+  
+
+        /* Sidebar */ 
+
+        .sidebar { 
+
+            width: 280px; 
+
+            background: var(--bg-panel); 
+
+            border-right: 1px solid var(--bg-elevated); 
+
+            display: flex; 
+
+            flex-direction: column; 
+
+            padding: var(--space-lg); 
+
+            gap: var(--space-md); 
+
+        } 
+
+  
+
+        .sidebar-header { 
+
+            text-align: center; 
+
+            padding-bottom: var(--space-md); 
+
+            border-bottom: 1px solid var(--bg-elevated); 
+
+        } 
+
+  
+
+        .sidebar-logo { 
+
+            font-size: 1.5rem; 
+
+            font-weight: 700; 
+
+            color: var(--neon-cyan); 
+
+            text-shadow: 0 0 10px var(--neon-cyan); 
+
+            font-family: var(--font-mono); 
+
+        } 
+
+  
+
+        .sidebar-subtitle { 
+
+            font-size: 0.75rem; 
+
+            color: var(--text-muted); 
+
+            margin-top: var(--space-xs); 
+
+        } 
+
+  
+
+        .level-nav { 
+
+            flex: 1; 
+
+            overflow-y: auto; 
+
+        } 
+
+  
+
+        .level-item { 
+
+            display: flex; 
+
+            align-items: center; 
+
+            gap: var(--space-sm); 
+
+            padding: var(--space-sm) var(--space-md); 
+
+            margin-bottom: var(--space-xs); 
+
+            border-radius: var(--border-radius); 
+
+            cursor: pointer; 
+
+            transition: all 0.2s ease; 
+
+            border: 1px solid transparent; 
+
+        } 
+
+  
+
+        .level-item:hover:not(.locked) { 
+
+            background: var(--bg-elevated); 
+
+        } 
+
+  
+
+        .level-item.active { 
+
+            background: var(--bg-elevated); 
+
+            border-color: var(--neon-cyan); 
+
+            box-shadow: var(--shadow-glow); 
+
+        } 
+
+  
+
+        .level-item.locked { 
+
+            opacity: 0.5; 
+
+            cursor: not-allowed; 
+
+        } 
+
+  
+
+        .level-item.completed .level-status { 
+
+            color: var(--success); 
+
+        } 
+
+  
+
+        .level-status { 
+
+            width: 24px; 
+
+            height: 24px; 
+
+            display: flex; 
+
+            align-items: center; 
+
+            justify-content: center; 
+
+            font-size: 0.875rem; 
+
+        } 
+
+  
+
+        .level-info { 
+
+            flex: 1; 
+
+        } 
+
+  
+
+        .level-title { 
+
+            font-size: 0.875rem; 
+
+            font-weight: 600; 
+
+        } 
+
+  
+
+        .level-subtitle { 
+
+            font-size: 0.75rem; 
+
+            color: var(--text-muted); 
+
+        } 
+
+  
+
+        .sidebar-actions { 
+
+            display: flex; 
+
+            flex-direction: column; 
+
+            gap: var(--space-sm); 
+
+            padding-top: var(--space-md); 
+
+            border-top: 1px solid var(--bg-elevated); 
+
+        } 
+
+  
+
+        /* Main Content */ 
+
+        .main-content { 
+
+            flex: 1; 
+
+            overflow-y: auto; 
+
+            padding: var(--space-xl); 
+
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #0f172a 100%); 
+
+        } 
+
+  
+
+        /* ============================================ 
+
+           BUTTONS 
+
+           ============================================ */ 
+
+        .btn { 
+
+            display: inline-flex; 
+
+            align-items: center; 
+
+            justify-content: center; 
+
+            gap: var(--space-sm); 
+
+            padding: var(--space-sm) var(--space-lg); 
+
+            border-radius: var(--border-radius); 
+
+            font-size: 0.875rem; 
+
+            font-weight: 600; 
+
+            cursor: pointer; 
+
+            transition: all 0.2s ease; 
+
+            border: none; 
+
+            font-family: inherit; 
+
+        } 
+
+  
+
+        .btn:focus { 
+
+            outline: 2px solid var(--neon-cyan); 
+
+            outline-offset: 2px; 
+
+        } 
+
+  
+
+        .btn-primary { 
+
+            background: linear-gradient(135deg, var(--neon-cyan) 0%, #0099cc 100%); 
+
+            color: var(--bg-dark); 
+
+        } 
+
+  
+
+        .btn-primary:hover { 
+
+            box-shadow: 0 0 20px var(--neon-cyan); 
+
+            transform: translateY(-1px); 
+
+        } 
+
+  
+
+        .btn-secondary { 
+
+            background: var(--bg-elevated); 
+
+            color: var(--text-primary); 
+
+            border: 1px solid var(--bg-elevated); 
+
+        } 
+
+  
+
+        .btn-secondary:hover { 
+
+            border-color: var(--neon-cyan); 
+
+        } 
+
+  
+
+        .btn-success { 
+
+            background: linear-gradient(135deg, var(--neon-green) 0%, #00cc6a 100%); 
+
+            color: var(--bg-dark); 
+
+        } 
+
+  
+
+        .btn-warning { 
+
+            background: linear-gradient(135deg, var(--neon-orange) 0%, #cc5522 100%); 
+
+            color: var(--bg-dark); 
+
+        } 
+
+  
+
+        .btn-ghost { 
+
+            background: transparent; 
+
+            color: var(--text-secondary); 
+
+        } 
+
+  
+
+        .btn-ghost:hover { 
+
+            color: var(--neon-cyan); 
+
+        } 
+
+  
+
+        .btn:disabled { 
+
+            opacity: 0.5; 
+
+            cursor: not-allowed; 
+
+            transform: none !important; 
+
+            box-shadow: none !important; 
+
+        } 
+
+  
+
+        .btn-sm { 
+
+            padding: var(--space-xs) var(--space-sm); 
+
+            font-size: 0.75rem; 
+
+        } 
+
+  
+
+        .btn-lg { 
+
+            padding: var(--space-md) var(--space-xl); 
+
+            font-size: 1rem; 
+
+        } 
+
+  
+
+        /* ============================================ 
+
+           CARDS & PANELS 
+
+           ============================================ */ 
+
+        .card { 
+
+            background: var(--bg-card); 
+
+            border-radius: var(--border-radius-lg); 
+
+            padding: var(--space-lg); 
+
+            box-shadow: var(--shadow-card); 
+
+            border: 1px solid var(--bg-elevated); 
+
+        } 
+
+  
+
+        .card-header { 
+
+            display: flex; 
+
+            align-items: center; 
+
+            justify-content: space-between; 
+
+            margin-bottom: var(--space-md); 
+
+            padding-bottom: var(--space-md); 
+
+            border-bottom: 1px solid var(--bg-elevated); 
+
+        } 
+
+  
+
+        .card-title { 
+
+            font-size: 1.125rem; 
+
+            font-weight: 600; 
+
+            color: var(--neon-cyan); 
+
+        } 
+
+  
+
+        .terminal-panel { 
+
+            background: #000; 
+
+            border-radius: var(--border-radius); 
+
+            padding: var(--space-md); 
+
+            font-family: var(--font-mono); 
+
+            font-size: 0.875rem; 
+
+            border: 1px solid var(--neon-cyan); 
+
+            box-shadow: inset 0 0 20px rgba(0, 240, 255, 0.1); 
+
+        } 
+
+  
+
+        .terminal-header { 
+
+            display: flex; 
+
+            align-items: center; 
+
+            gap: var(--space-sm); 
+
+            margin-bottom: var(--space-md); 
+
+            padding-bottom: var(--space-sm); 
+
+            border-bottom: 1px solid var(--bg-elevated); 
+
+        } 
+
+  
+
+        .terminal-dot { 
+
+            width: 10px; 
+
+            height: 10px; 
+
+            border-radius: 50%; 
+
+        } 
+
+  
+
+        .terminal-dot.red { background: #ff5f57; } 
+
+        .terminal-dot.yellow { background: #febc2e; } 
+
+        .terminal-dot.green { background: #28c840; } 
+
+  
+
+        .terminal-title { 
+
+            flex: 1; 
+
+            text-align: center; 
+
+            color: var(--text-muted); 
+
+            font-size: 0.75rem; 
+
+        } 
+
+  
+
+        .terminal-content { 
+
+            color: var(--neon-green); 
+
+            line-height: 1.8; 
+
+        } 
+
+  
+
+        .terminal-line { 
+
+            display: flex; 
+
+            gap: var(--space-sm); 
+
+        } 
+
+  
+
+        .terminal-prompt { 
+
+            color: var(--neon-cyan); 
+
+        } 
+
+  
+
+        /* ============================================ 
+
+           MODAL 
+
+           ============================================ */ 
+
+        .modal-overlay { 
+
+            position: fixed; 
+
+            top: 0; 
+
+            left: 0; 
+
+            right: 0; 
+
+            bottom: 0; 
+
+            background: rgba(0, 0, 0, 0.8); 
+
+            display: flex; 
+
+            align-items: center; 
+
+            justify-content: center; 
+
+            z-index: 1000; 
+
+            backdrop-filter: blur(4px); 
+
+            opacity: 0; 
+
+            visibility: hidden; 
+
+            transition: all 0.3s ease; 
+
+        } 
+
+  
+
+        .modal-overlay.active { 
+
+            opacity: 1; 
+
+            visibility: visible; 
+
+        } 
+
+  
+
+        .modal { 
+
+            background: var(--bg-panel); 
+
+            border-radius: var(--border-radius-lg); 
+
+            max-width: 600px; 
+
+            width: 90%; 
+
+            max-height: 80vh; 
+
+            overflow-y: auto;
+            overflow-x: visible;
+
+            box-shadow: 0 0 40px rgba(0, 240, 255, 0.2); 
+
+            border: 1px solid var(--neon-cyan); 
+
+            transform: scale(0.9); 
+
+            transition: transform 0.3s ease; 
+
+        } 
+
+  
+
+        .modal-overlay.active .modal { 
+
+            transform: scale(1); 
+
+        } 
+
+  
+
+        .modal-header { 
+
+            display: flex; 
+
+            align-items: center; 
+
+            justify-content: space-between; 
+
+            padding: var(--space-lg); 
+
+            border-bottom: 1px solid var(--bg-elevated); 
+
+        } 
+
+  
+
+        .modal-title { 
+
+            font-size: 1.25rem; 
+
+            font-weight: 600; 
+
+            color: var(--neon-cyan); 
+
+        } 
+
+  
+
+        .modal-close { 
+
+            background: none; 
+
+            border: none; 
+
+            color: var(--text-muted); 
+
+            font-size: 1.5rem; 
+
+            cursor: pointer; 
+
+            line-height: 1; 
+
+            padding: var(--space-xs); 
+
+        } 
+
+  
+
+        .modal-close:hover { 
+
+            color: var(--text-primary); 
+
+        } 
+
+  
+
+        .modal-body { 
+
+            padding: var(--space-lg); 
+
+        } 
+
+  
+
+        .modal-footer { 
+
+            padding: var(--space-lg); 
+
+            border-top: 1px solid var(--bg-elevated); 
+
+            display: flex; 
+
+            justify-content: flex-end; 
+
+            gap: var(--space-sm); 
+
+        } 
+
+  
+
+        /* ============================================ 
+
+           INTRO SLIDESHOW 
+
+           ============================================ */ 
+
+        .intro-container { 
+
+            max-width: 800px; 
+
+            margin: 0 auto; 
+
+        } 
+
+  
+
+        .slide { 
+
+            display: none; 
+
+            animation: fadeIn 0.5s ease; 
+
+        } 
+
+  
+
+        .slide.active { 
+
+            display: block; 
+
+        } 
+
+  
+
+        @keyframes fadeIn { 
+
+            from { opacity: 0; transform: translateY(10px); } 
+
+            to { opacity: 1; transform: translateY(0); } 
+
+        } 
+
+  
+
+        .slide-content { 
+
+            text-align: center; 
+
+            padding: var(--space-2xl); 
+
+        } 
+
+  
+
+        .slide-icon { 
+
+            font-size: 4rem; 
+
+            margin-bottom: var(--space-lg); 
+
+        } 
+
+  
+
+        .slide-title { 
+
+            font-size: 2rem; 
+
+            font-weight: 700; 
+
+            color: var(--neon-cyan); 
+
+            margin-bottom: var(--space-md); 
+
+            text-shadow: 0 0 20px rgba(0, 240, 255, 0.5); 
+
+        } 
+
+  
+
+        .slide-text { 
+
+            font-size: 1.125rem; 
+
+            color: var(--text-secondary); 
+
+            max-width: 600px; 
+
+            margin: 0 auto var(--space-lg); 
+
+        } 
+
+  
+
+        .slide-visual { 
+
+            background: var(--bg-card); 
+
+            border-radius: var(--border-radius-lg); 
+
+            padding: var(--space-xl); 
+
+            margin: var(--space-lg) 0; 
+
+            border: 1px solid var(--bg-elevated); 
+
+        } 
+
+  
+
+        .slide-nav { 
+
+            display: flex; 
+
+            justify-content: center; 
+
+            align-items: center; 
+
+            gap: var(--space-lg); 
+
+            margin-top: var(--space-xl); 
+
+        } 
+
+  
+
+        .slide-dots { 
+
+            display: flex; 
+
+            gap: var(--space-sm); 
+
+        } 
+
+  
+
+        .slide-dot { 
+
+            width: 10px; 
+
+            height: 10px; 
+
+            border-radius: 50%; 
+
+            background: var(--bg-elevated); 
+
+            cursor: pointer; 
+
+            transition: all 0.2s ease; 
+
+        } 
+
+  
+
+        .slide-dot.active { 
+
+            background: var(--neon-cyan); 
+
+            box-shadow: 0 0 10px var(--neon-cyan); 
+
+        } 
+
+  
+
+        /* ============================================ 
+
+           GLOSSARY 
+
+           ============================================ */ 
+
+        .glossary-term { 
+
+            color: var(--neon-yellow); 
+
+            cursor: help; 
+
+            border-bottom: 1px dotted var(--neon-yellow); 
+
+            position: relative; 
+
+        } 
+
+  
+
+        .glossary-popup {
+            position: fixed;
+            background: var(--bg-panel);
+            border: 1px solid var(--neon-yellow);
+            border-radius: var(--border-radius);
+            padding: var(--space-sm) var(--space-md);
+            font-size: 0.875rem;
+            color: var(--text-primary);
+            white-space: normal;
+            min-width: 280px;
+            max-width: 400px;
+            z-index: 9999;
+            box-shadow: 0 0 20px rgba(255, 221, 0, 0.2);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.2s ease, visibility 0.2s ease;
+        }
+
+        .glossary-term:hover .glossary-popup,
+        .glossary-term:focus .glossary-popup {
+            opacity: 1;
+            visibility: visible;
+        }
+
+  
+
+        .glossary-list { 
+
+            display: grid; 
+
+            gap: var(--space-md); 
+
+        } 
+
+  
+
+        .glossary-item { 
+
+            background: var(--bg-card); 
+
+            padding: var(--space-md); 
+
+            border-radius: var(--border-radius); 
+
+            border-left: 3px solid var(--neon-yellow); 
+
+        } 
+
+  
+
+        .glossary-item-term { 
+
+            font-weight: 600; 
+
+            color: var(--neon-yellow); 
+
+            margin-bottom: var(--space-xs); 
+
+        } 
+
+  
+
+        .glossary-item-def { 
+
+            color: var(--text-secondary); 
+
+            font-size: 0.875rem; 
+
+        } 
+
+  
+
+        /* ============================================ 
+
+           LEVEL 1: HASHBREAKER 
+
+           ============================================ */ 
+
+        .hashbreaker-layout { 
+
+            display: grid; 
+
+            grid-template-columns: 1fr 1fr; 
+
+            gap: var(--space-lg); 
+
+        } 
+
+  
+
+        .employee-list { 
+
+            display: flex; 
+
+            flex-direction: column; 
+
+            gap: var(--space-sm); 
+
+        } 
+
+  
+
+        .employee-card { 
+
+            display: flex; 
+
+            align-items: center; 
+
+            gap: var(--space-md); 
+
+            padding: var(--space-md); 
+
+            background: var(--bg-card); 
+
+            border-radius: var(--border-radius); 
+
+            cursor: pointer; 
+
+            border: 2px solid transparent; 
+
+            transition: all 0.2s ease; 
+
+        } 
+
+  
+
+        .employee-card:hover { 
+
+            border-color: var(--neon-cyan); 
+
+        } 
+
+  
+
+        .employee-card.selected { 
+
+            border-color: var(--neon-cyan); 
+
+            box-shadow: var(--shadow-glow); 
+
+        } 
+
+  
+
+        .employee-card.cracked { 
+
+            border-color: var(--success); 
+
+            opacity: 0.7; 
+
+        } 
+
+  
+
+        .employee-avatar { 
+
+            width: 48px; 
+
+            height: 48px; 
+
+            border-radius: 50%; 
+
+            background: linear-gradient(135deg, var(--neon-cyan) 0%, var(--neon-pink) 100%); 
+
+            display: flex; 
+
+            align-items: center; 
+
+            justify-content: center; 
+
+            font-size: 1.25rem; 
+
+            font-weight: 700; 
+
+        } 
+
+  
+
+        .employee-info { 
+
+            flex: 1; 
+
+        } 
+
+  
+
+        .employee-name { 
+
+            font-weight: 600; 
+
+        } 
+
+  
+
+        .employee-role { 
+
+            font-size: 0.75rem; 
+
+            color: var(--text-muted); 
+
+        } 
+
+  
+
+        .employee-status { 
+
+            font-size: 1.25rem; 
+
+        } 
+
+  
+
+        .hash-display { 
+
+            font-family: var(--font-mono); 
+
+            font-size: 0.75rem; 
+
+            color: var(--neon-green); 
+
+            background: #000; 
+
+            padding: var(--space-xs) var(--space-sm); 
+
+            border-radius: 4px; 
+
+            word-break: break-all; 
+
+            margin-top: var(--space-xs); 
+
+        } 
+
+  
+
+        .dictionary-grid { 
+
+            display: grid; 
+
+            grid-template-columns: repeat(2, 1fr); 
+
+            gap: var(--space-sm); 
+
+        } 
+
+  
+
+        .dictionary-word { 
+
+            padding: var(--space-sm) var(--space-md); 
+
+            background: var(--bg-elevated); 
+
+            border-radius: var(--border-radius); 
+
+            font-family: var(--font-mono); 
+
+            cursor: pointer; 
+
+            border: 1px solid transparent; 
+
+            transition: all 0.2s ease; 
+
+            text-align: center; 
+
+        } 
+
+  
+
+        .dictionary-word:hover { 
+
+            border-color: var(--neon-cyan); 
+
+        } 
+
+  
+
+        .dictionary-word.selected { 
+
+            border-color: var(--neon-cyan); 
+
+            background: rgba(0, 240, 255, 0.1); 
+
+        } 
+
+  
+
+        .hash-compare { 
+
+            background: #000; 
+
+            border-radius: var(--border-radius); 
+
+            padding: var(--space-md); 
+
+            font-family: var(--font-mono); 
+
+            font-size: 0.75rem; 
+
+            margin-top: var(--space-md); 
+
+        } 
+
+  
+
+        .hash-row { 
+
+            display: flex; 
+
+            justify-content: space-between; 
+
+            padding: var(--space-xs) 0; 
+
+            border-bottom: 1px solid var(--bg-elevated); 
+
+        } 
+
+  
+
+        .hash-label { 
+
+            color: var(--text-muted); 
+
+        } 
+
+  
+
+        .hash-value { 
+
+            color: var(--neon-green); 
+
+            word-break: break-all; 
+
+        } 
+
+  
+
+        .hash-match { 
+
+            color: var(--success); 
+
+            font-weight: bold; 
+
+        } 
+
+  
+
+        .hash-nomatch { 
+
+            color: var(--error); 
+
+        } 
+
+  
+
+        /* ============================================ 
+
+           LEVEL 2: PHISHING DESIGNER 
+
+           ============================================ */ 
+
+        .phishing-layout { 
+
+            display: grid; 
+
+            grid-template-columns: 300px 1fr 280px; 
+
+            gap: var(--space-lg); 
+
+            height: calc(100vh - 120px); 
+
+        } 
+
+  
+
+        .snippets-sidebar { 
+
+            overflow-y: auto; 
+
+        } 
+
+  
+
+        .snippet-category { 
+
+            margin-bottom: var(--space-lg); 
+
+        } 
+
+  
+
+        .snippet-category-title { 
+
+            font-size: 0.875rem; 
+
+            font-weight: 600; 
+
+            color: var(--neon-cyan); 
+
+            margin-bottom: var(--space-sm); 
+
+            display: flex; 
+
+            align-items: center; 
+
+            gap: var(--space-sm); 
+
+        } 
+
+  
+
+        .snippet-option { 
+
+            padding: var(--space-sm); 
+
+            background: var(--bg-card); 
+
+            border-radius: var(--border-radius); 
+
+            margin-bottom: var(--space-xs); 
+
+            cursor: pointer; 
+
+            border: 1px solid transparent; 
+
+            font-size: 0.8rem; 
+
+            transition: all 0.2s ease; 
+
+        } 
+
+  
+
+        .snippet-option:hover { 
+
+            border-color: var(--neon-cyan); 
+
+        } 
+
+  
+
+        .snippet-option.selected { 
+
+            border-color: var(--neon-green); 
+
+            background: rgba(0, 255, 136, 0.1); 
+
+        } 
+
+  
+
+        .email-preview-container { 
+
+            background: #fff; 
+
+            border-radius: var(--border-radius-lg); 
+
+            overflow: hidden; 
+
+            display: flex; 
+
+            flex-direction: column; 
+
+        } 
+
+  
+
+        .email-toolbar { 
+
+            background: #f3f4f6; 
+
+            padding: var(--space-sm) var(--space-md); 
+
+            border-bottom: 1px solid #e5e7eb; 
+
+            display: flex; 
+
+            gap: var(--space-sm); 
+
+        } 
+
+  
+
+        .email-toolbar-btn { 
+
+            width: 12px; 
+
+            height: 12px; 
+
+            border-radius: 50%; 
+
+        } 
+
+  
+
+        .email-preview { 
+
+            flex: 1; 
+
+            padding: var(--space-lg); 
+
+            color: #1f2937; 
+
+            font-size: 0.9rem; 
+
+            overflow-y: auto; 
+
+        } 
+
+  
+
+        .email-header { 
+
+            border-bottom: 1px solid #e5e7eb; 
+
+            padding-bottom: var(--space-md); 
+
+            margin-bottom: var(--space-md); 
+
+        } 
+
+  
+
+        .email-field { 
+
+            display: flex; 
+
+            margin-bottom: var(--space-xs); 
+
+        } 
+
+  
+
+        .email-field-label { 
+
+            width: 60px; 
+
+            color: #6b7280; 
+
+            font-weight: 500; 
+
+        } 
+
+  
+
+        .email-field-value { 
+
+            flex: 1; 
+
+            color: #1f2937; 
+
+        } 
+
+  
+
+        .email-body { 
+
+            line-height: 1.8; 
+
+        } 
+
+  
+
+        .email-attachment { 
+
+            display: inline-flex; 
+
+            align-items: center; 
+
+            gap: var(--space-sm); 
+
+            background: #f3f4f6; 
+
+            padding: var(--space-sm) var(--space-md); 
+
+            border-radius: var(--border-radius); 
+
+            margin-top: var(--space-md); 
+
+            font-size: 0.85rem; 
+
+        } 
+
+  
+
+        .email-footer { 
+
+            margin-top: var(--space-lg); 
+
+            padding-top: var(--space-md); 
+
+            border-top: 1px solid #e5e7eb; 
+
+            font-size: 0.75rem; 
+
+            color: #9ca3af; 
+
+        } 
+
+  
+
+        .risk-analysis { 
+
+            display: flex; 
+
+            flex-direction: column; 
+
+            gap: var(--space-md); 
+
+        } 
+
+  
+
+        .risk-metric { 
+
+            background: var(--bg-card); 
+
+            border-radius: var(--border-radius); 
+
+            padding: var(--space-md); 
+
+        } 
+
+  
+
+        .risk-metric-label { 
+
+            font-size: 0.75rem; 
+
+            color: var(--text-muted); 
+
+            margin-bottom: var(--space-xs); 
+
+        } 
+
+  
+
+        .risk-metric-bar { 
+
+            height: 8px; 
+
+            background: var(--bg-elevated); 
+
+            border-radius: 4px; 
+
+            overflow: hidden; 
+
+        } 
+
+  
+
+        .risk-metric-fill { 
+
+            height: 100%; 
+
+            border-radius: 4px; 
+
+            transition: width 0.5s ease; 
+
+        } 
+
+  
+
+        .risk-metric-value { 
+
+            font-size: 0.875rem; 
+
+            font-weight: 600; 
+
+            margin-top: var(--space-xs); 
+
+        } 
+
+  
+
+        .heuristic-logs { 
+
+            flex: 1; 
+
+            background: #000; 
+
+            border-radius: var(--border-radius); 
+
+            padding: var(--space-sm); 
+
+            font-family: var(--font-mono); 
+
+            font-size: 0.7rem; 
+
+            overflow-y: auto; 
+
+            max-height: 200px; 
+
+        } 
+
+  
+
+        .log-entry { 
+
+            padding: var(--space-xs) 0; 
+
+            border-bottom: 1px solid var(--bg-elevated); 
+
+        } 
+
+  
+
+        .log-warn { color: var(--warning); } 
+
+        .log-success { color: var(--success); } 
+
+        .log-info { color: var(--info); } 
+
+        .log-error { color: var(--error); } 
+
+  
+
+        /* ============================================ 
+
+           LEVEL 3: VIRTUAL DESKTOP 
+
+           ============================================ */ 
+
+        .desktop-container { 
+
+            background: linear-gradient(135deg, #1e3a5f 0%, #0d1b2a 100%); 
+
+            border-radius: var(--border-radius-lg); 
+
+            padding: var(--space-xl); 
+
+            min-height: 500px; 
+
+            position: relative; 
+
+        } 
+
+  
+
+        .desktop-grid { 
+
+            display: grid; 
+
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); 
+
+            gap: var(--space-lg); 
+
+        } 
+
+  
+
+        .desktop-icon { 
+
+            display: flex; 
+
+            flex-direction: column; 
+
+            align-items: center; 
+
+            gap: var(--space-sm); 
+
+            padding: var(--space-md); 
+
+            border-radius: var(--border-radius); 
+
+            cursor: pointer; 
+
+            transition: all 0.2s ease; 
+
+            border: 2px solid transparent; 
+
+        } 
+
+  
+
+        .desktop-icon:hover { 
+
+            background: rgba(255, 255, 255, 0.1); 
+
+        } 
+
+  
+
+        .desktop-icon.selected-attacker { 
+
+            border-color: var(--neon-pink); 
+
+            background: rgba(255, 0, 128, 0.2); 
+
+        } 
+
+  
+
+        .desktop-icon.selected-defender { 
+
+            border-color: var(--neon-green); 
+
+            background: rgba(0, 255, 136, 0.2); 
+
+        } 
+
+  
+
+        .desktop-icon-img { 
+
+            width: 48px; 
+
+            height: 48px; 
+
+            display: flex; 
+
+            align-items: center; 
+
+            justify-content: center; 
+
+            font-size: 2rem; 
+
+        } 
+
+  
+
+        .desktop-icon-label { 
+
+            font-size: 0.75rem; 
+
+            text-align: center; 
+
+            color: #fff; 
+
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5); 
+
+        } 
+
+  
+
+        .selection-panel { 
+
+            display: grid; 
+
+            grid-template-columns: 1fr 1fr; 
+
+            gap: var(--space-lg); 
+
+            margin-top: var(--space-lg); 
+
+        } 
+
+  
+
+        .selection-box { 
+
+            background: var(--bg-card); 
+
+            border-radius: var(--border-radius); 
+
+            padding: var(--space-md); 
+
+        } 
+
+  
+
+        .selection-title { 
+
+            font-weight: 600; 
+
+            margin-bottom: var(--space-sm); 
+
+            display: flex; 
+
+            align-items: center; 
+
+            gap: var(--space-sm); 
+
+        } 
+
+  
+
+        .selection-count { 
+
+            font-size: 0.875rem; 
+
+            color: var(--text-muted); 
+
+        } 
+
+  
+
+        /* ============================================ 
+
+           LEVEL 4: PRIVILEGE ESCALATION 
+
+           ============================================ */ 
+
+        .sequence-container { 
+
+            max-width: 600px; 
+
+            margin: 0 auto; 
+
+        } 
+
+  
+
+        .sequence-list { 
+
+            display: flex; 
+
+            flex-direction: column; 
+
+            gap: var(--space-sm); 
+
+        } 
+
+  
+
+        .sequence-item { 
+
+            display: flex; 
+
+            align-items: center; 
+
+            gap: var(--space-md); 
+
+            padding: var(--space-md); 
+
+            background: var(--bg-card); 
+
+            border-radius: var(--border-radius); 
+
+            cursor: grab; 
+
+            border: 2px solid transparent; 
+
+            transition: all 0.2s ease; 
+
+        } 
+
+  
+
+        .sequence-item:hover { 
+
+            border-color: var(--neon-cyan); 
+
+        } 
+
+  
+
+        .sequence-item.dragging { 
+
+            opacity: 0.5; 
+
+            border-color: var(--neon-pink); 
+
+        } 
+
+  
+
+        .sequence-number { 
+
+            width: 32px; 
+
+            height: 32px; 
+
+            border-radius: 50%; 
+
+            background: var(--bg-elevated); 
+
+            display: flex; 
+
+            align-items: center; 
+
+            justify-content: center; 
+
+            font-weight: 600; 
+
+        } 
+
+  
+
+        .sequence-content { 
+
+            flex: 1; 
+
+        } 
+
+  
+
+        .sequence-title { 
+
+            font-weight: 600; 
+
+        } 
+
+  
+
+        .sequence-desc { 
+
+            font-size: 0.75rem; 
+
+            color: var(--text-muted); 
+
+        } 
+
+  
+
+        .sequence-handle { 
+
+            color: var(--text-muted); 
+
+            cursor: grab; 
+
+        } 
+
+  
+
+        .sequence-controls { 
+
+            display: flex; 
+
+            gap: var(--space-xs); 
+
+        } 
+
+  
+
+        .sequence-btn { 
+
+            padding: var(--space-xs); 
+
+            background: var(--bg-elevated); 
+
+            border: none; 
+
+            border-radius: 4px; 
+
+            color: var(--text-primary); 
+
+            cursor: pointer; 
+
+        } 
+
+  
+
+        .sequence-btn:hover { 
+
+            background: var(--neon-cyan); 
+
+            color: var(--bg-dark); 
+
+        } 
+
+  
+
+        /* ============================================ 
+
+           LEVEL 5: DATA DISCOVERY 
+
+           ============================================ */ 
+
+        .assets-grid { 
+
+            display: grid; 
+
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+
+            gap: var(--space-lg); 
+
+        } 
+
+  
+
+        .asset-card { 
+
+            background: var(--bg-card); 
+
+            border-radius: var(--border-radius-lg); 
+
+            padding: var(--space-lg); 
+
+            border: 2px solid transparent; 
+
+            transition: all 0.2s ease; 
+
+        } 
+
+  
+
+        .asset-card.classified { 
+
+            border-color: var(--success); 
+
+        } 
+
+  
+
+        .asset-icon { 
+
+            font-size: 2rem; 
+
+            margin-bottom: var(--space-md); 
+
+        } 
+
+  
+
+        .asset-name { 
+
+            font-weight: 600; 
+
+            margin-bottom: var(--space-sm); 
+
+        } 
+
+  
+
+        .asset-desc { 
+
+            font-size: 0.875rem; 
+
+            color: var(--text-muted); 
+
+            margin-bottom: var(--space-md); 
+
+        } 
+
+  
+
+        .classification-select { 
+
+            width: 100%; 
+
+            padding: var(--space-sm); 
+
+            background: var(--bg-elevated); 
+
+            border: 1px solid var(--bg-elevated); 
+
+            border-radius: var(--border-radius); 
+
+            color: var(--text-primary); 
+
+            font-size: 0.875rem; 
+
+            margin-bottom: var(--space-sm); 
+
+        } 
+
+  
+
+        .controls-select { 
+
+            width: 100%; 
+
+            padding: var(--space-sm); 
+
+            background: var(--bg-elevated); 
+
+            border: 1px solid var(--bg-elevated); 
+
+            border-radius: var(--border-radius); 
+
+            color: var(--text-primary); 
+
+            font-size: 0.875rem; 
+
+        } 
+
+  
+
+        /* ============================================ 
+
+           LESSONS LEARNED 
+
+           ============================================ */ 
+
+        .lessons-container { 
+
+            max-width: 600px; 
+
+            margin: var(--space-xl) auto; 
+
+            text-align: center; 
+
+        } 
+
+  
+
+        .lessons-icon { 
+
+            font-size: 4rem; 
+
+            margin-bottom: var(--space-lg); 
+
+        } 
+
+  
+
+        .lessons-title { 
+
+            font-size: 1.5rem; 
+
+            font-weight: 700; 
+
+            color: var(--neon-green); 
+
+            margin-bottom: var(--space-lg); 
+
+        } 
+
+  
+
+        .lessons-list { 
+
+            text-align: left; 
+
+            margin-bottom: var(--space-xl); 
+
+        } 
+
+  
+
+        .lesson-item { 
+
+            display: flex; 
+
+            gap: var(--space-md); 
+
+            padding: var(--space-md); 
+
+            background: var(--bg-card); 
+
+            border-radius: var(--border-radius); 
+
+            margin-bottom: var(--space-sm); 
+
+            border-left: 3px solid var(--neon-cyan); 
+
+        } 
+
+  
+
+        .lesson-icon { 
+
+            color: var(--neon-cyan); 
+
+        } 
+
+  
+
+        .dbm-connection { 
+
+            background: rgba(0, 240, 255, 0.1); 
+
+            border: 1px solid var(--neon-cyan); 
+
+            border-radius: var(--border-radius); 
+
+            padding: var(--space-md); 
+
+            margin-top: var(--space-lg); 
+
+        } 
+
+  
+
+        .dbm-title { 
+
+            font-weight: 600; 
+
+            color: var(--neon-cyan); 
+
+            margin-bottom: var(--space-sm); 
+
+        } 
+
+  
+
+        /* ============================================ 
+
+           CERTIFICATE 
+
+           ============================================ */ 
+
+        .certificate-container { 
+
+            max-width: 700px; 
+
+            margin: 0 auto; 
+
+            text-align: center; 
+
+        } 
+
+  
+
+        .certificate-preview { 
+
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1a 100%); 
+
+            border: 3px solid var(--neon-cyan); 
+
+            border-radius: var(--border-radius-lg); 
+
+            padding: var(--space-2xl); 
+
+            margin-bottom: var(--space-xl); 
+
+            box-shadow: 0 0 40px rgba(0, 240, 255, 0.3); 
+
+        } 
+
+  
+
+        .certificate-seal { 
+
+            font-size: 3rem; 
+
+            margin-bottom: var(--space-md); 
+
+        } 
+
+  
+
+        .certificate-title { 
+
+            font-size: 2rem; 
+
+            font-weight: 700; 
+
+            color: var(--neon-cyan); 
+
+            text-shadow: 0 0 20px rgba(0, 240, 255, 0.5); 
+
+            margin-bottom: var(--space-md); 
+
+        } 
+
+  
+
+        .certificate-text { 
+
+            color: var(--text-secondary); 
+
+            margin-bottom: var(--space-md); 
+
+        } 
+
+  
+
+        .certificate-name { 
+
+            font-size: 1.5rem; 
+
+            font-weight: 600; 
+
+            color: var(--neon-green); 
+
+            margin: var(--space-lg) 0; 
+
+        } 
+
+  
+
+        .certificate-status { 
+
+            display: inline-block; 
+
+            background: linear-gradient(135deg, var(--neon-green) 0%, #00cc6a 100%); 
+
+            color: var(--bg-dark); 
+
+            padding: var(--space-sm) var(--space-lg); 
+
+            border-radius: var(--border-radius); 
+
+            font-weight: 600; 
+
+            margin: var(--space-md) 0; 
+
+        } 
+
+  
+
+        .certificate-date { 
+
+            color: var(--text-muted); 
+
+            font-size: 0.875rem; 
+
+        } 
+
+  
+
+        .certificate-disclaimer { 
+
+            font-size: 0.75rem; 
+
+            color: var(--text-muted); 
+
+            margin-top: var(--space-md); 
+
+            font-style: italic; 
+
+        } 
+
+  
+
+        .name-input { 
+
+            padding: var(--space-md); 
+
+            background: var(--bg-card); 
+
+            border: 1px solid var(--bg-elevated); 
+
+            border-radius: var(--border-radius); 
+
+            color: var(--text-primary); 
+
+            font-size: 1rem; 
+
+            width: 100%; 
+
+            max-width: 300px; 
+
+            text-align: center; 
+
+            margin-bottom: var(--space-lg); 
+
+        } 
+
+  
+
+        .name-input:focus { 
+
+            outline: none; 
+
+            border-color: var(--neon-cyan); 
+
+        } 
+
+  
+
+        .outcomes-checklist { 
+
+            text-align: left; 
+
+            margin-bottom: var(--space-xl); 
+
+        } 
+
+  
+
+        .outcome-item { 
+
+            display: flex; 
+
+            align-items: center; 
+
+            gap: var(--space-md); 
+
+            padding: var(--space-sm); 
+
+            color: var(--success); 
+
+        } 
+
+  
+
+        /* ============================================ 
+
+           FEEDBACK & ALERTS 
+
+           ============================================ */ 
+
+        .feedback { 
+
+            padding: var(--space-md); 
+
+            border-radius: var(--border-radius); 
+
+            margin: var(--space-md) 0; 
+
+            display: flex; 
+
+            align-items: center; 
+
+            gap: var(--space-md); 
+
+        } 
+
+  
+
+        .feedback-success { 
+
+            background: rgba(16, 185, 129, 0.1); 
+
+            border: 1px solid var(--success); 
+
+            color: var(--success); 
+
+        } 
+
+  
+
+        .feedback-warning { 
+
+            background: rgba(245, 158, 11, 0.1); 
+
+            border: 1px solid var(--warning); 
+
+            color: var(--warning); 
+
+        } 
+
+  
+
+        .feedback-info { 
+
+            background: rgba(59, 130, 246, 0.1); 
+
+            border: 1px solid var(--info); 
+
+            color: var(--info); 
+
+        } 
+
+  
+
+        .feedback-error { 
+
+            background: rgba(239, 68, 68, 0.1); 
+
+            border: 1px solid var(--error); 
+
+            color: var(--error); 
+
+        } 
+
+  
+
+        /* ============================================ 
+
+           SAFETY BANNER 
+
+           ============================================ */ 
+
+        .safety-banner { 
+
+            background: linear-gradient(90deg, rgba(255, 221, 0, 0.1) 0%, rgba(255, 107, 53, 0.1) 100%); 
+
+            border: 1px solid var(--neon-yellow); 
+
+            border-radius: var(--border-radius); 
+
+            padding: var(--space-sm) var(--space-md); 
+
+            display: flex; 
+
+            align-items: center; 
+
+            gap: var(--space-sm); 
+
+            font-size: 0.75rem; 
+
+            color: var(--neon-yellow); 
+
+            margin-bottom: var(--space-lg); 
+
+        } 
+
+  
+
+        /* ============================================ 
+
+           PROGRESS BAR 
+
+           ============================================ */ 
+
+        .progress-container { 
+
+            margin-bottom: var(--space-md); 
+
+        } 
+
+  
+
+        .progress-label { 
+
+            font-size: 0.75rem; 
+
+            color: var(--text-muted); 
+
+            margin-bottom: var(--space-xs); 
+
+        } 
+
+  
+
+        .progress-bar { 
+
+            height: 6px; 
+
+            background: var(--bg-elevated); 
+
+            border-radius: 3px; 
+
+            overflow: hidden; 
+
+        } 
+
+  
+
+        .progress-fill { 
+
+            height: 100%; 
+
+            background: linear-gradient(90deg, var(--neon-cyan) 0%, var(--neon-green) 100%); 
+
+            border-radius: 3px; 
+
+            transition: width 0.5s ease; 
+
+        } 
+
+  
+
+        /* ============================================ 
+
+           ACCESSIBILITY 
+
+           ============================================ */ 
+
+        .sr-only { 
+
+            position: absolute; 
+
+            width: 1px; 
+
+            height: 1px; 
+
+            padding: 0; 
+
+            margin: -1px; 
+
+            overflow: hidden; 
+
+            clip: rect(0, 0, 0, 0); 
+
+            white-space: nowrap; 
+
+            border: 0; 
+
+        } 
+
+  
+
+        [aria-live="polite"] { 
+
+            position: absolute; 
+
+            left: -9999px; 
+
+        } 
+
+  
+
+        :focus-visible { 
+
+            outline: 2px solid var(--neon-cyan); 
+
+            outline-offset: 2px; 
+
+        } 
+
+  
+
+        /* ============================================ 
+
+           PRINT STYLES (for certificate) 
+
+           ============================================ */ 
+
+        @media print { 
+
+            body { 
+
+                background: white; 
+
+                color: black; 
+
+            } 
+
+            .no-print { 
+
+                display: none !important; 
+
+            } 
+
+            .certificate-preview { 
+
+                border: 2px solid #333; 
+
+                box-shadow: none; 
+
+                background: white; 
+
+            } 
+
+            .certificate-title, .certificate-name { 
+
+                color: #333; 
+
+                text-shadow: none; 
+
+            } 
+
+            .certificate-status { 
+
+                background: #333; 
+
+                color: white; 
+
+            } 
+
+        } 
+
+  
+
+        /* ============================================ 
+
+           ANIMATIONS 
+
+           ============================================ */ 
+
+        @keyframes pulse { 
+
+            0%, 100% { opacity: 1; } 
+
+            50% { opacity: 0.5; } 
+
+        } 
+
+  
+
+        @keyframes glow { 
+
+            0%, 100% { box-shadow: 0 0 5px var(--neon-cyan); } 
+
+            50% { box-shadow: 0 0 20px var(--neon-cyan); } 
+
+        } 
+
+  
+
+        .animate-pulse { 
+
+            animation: pulse 2s infinite; 
+
+        } 
+
+  
+
+        .animate-glow { 
+
+            animation: glow 2s infinite; 
+
+        } 
+
+  
+
+        @keyframes typing { 
+
+            from { width: 0; } 
+
+            to { width: 100%; } 
+
+        } 
+
+  
+
+        .typing-effect { 
+
+            overflow: hidden; 
+
+            white-space: nowrap; 
+
+            animation: typing 2s steps(40); 
+
+        } 
+
+    </style> 
+
+</head> 
+
+<body> 
+
+    <div class="app-container"> 
+
+        <!-- Sidebar --> 
+
+        <aside class="sidebar" role="navigation" aria-label="Game navigation"> 
+
+            <div class="sidebar-header"> 
+
+                <div class="sidebar-logo">CYBER::BASICS</div> 
+
+                <div class="sidebar-subtitle">Hacker POV Simulation</div> 
+
+            </div> 
+
+  
+
+            <div class="progress-container"> 
+
+                <div class="progress-label">Overall Progress: <span id="progressText">0%</span></div> 
+
+                <div class="progress-bar"> 
+
+                    <div class="progress-fill" id="progressFill" style="width: 0%"></div> 
+
+                </div> 
+
+            </div> 
+
+  
+
+            <nav class="level-nav" aria-label="Levels"> 
+
+                <div id="levelNavItems"></div> 
+
+            </nav> 
+
+  
+
+            <div class="sidebar-actions"> 
+
+                <button class="btn btn-secondary" onclick="showIntro()"> 
+
+                    📖 Replay Intro 
+
+                </button> 
+
+                <button class="btn btn-secondary" onclick="showGlossary()"> 
+
+                    📚 Glossary 
+
+                </button> 
+
+                <button class="btn btn-ghost" onclick="resetGame()"> 
+
+                    🔄 Reset Progress 
+
+                </button> 
+
+            </div> 
+
+        </aside> 
+
+  
+
+        <!-- Main Content --> 
+
+        <main class="main-content" id="mainContent" role="main"> 
+
+            <!-- Content dynamically loaded here --> 
+
+        </main> 
+
+    </div> 
+
+  
+
+    <!-- Modal Container --> 
+
+    <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)"> 
+
+        <div class="modal" onclick="event.stopPropagation()"> 
+
+            <div class="modal-header"> 
+
+                <h2 class="modal-title" id="modalTitle">Modal Title</h2> 
+
+                <button class="modal-close" onclick="closeModal()" aria-label="Close modal">&times;</button> 
+
+            </div> 
+
+            <div class="modal-body" id="modalBody"> 
+
+                <!-- Modal content --> 
+
+            </div> 
+
+            <div class="modal-footer" id="modalFooter"> 
+
+                <button class="btn btn-primary" onclick="closeModal()">Close</button> 
+
+            </div> 
+
+        </div> 
+
+    </div> 
+
+  
+
+    <!-- Live Region for Accessibility --> 
+
+    <div id="liveRegion" aria-live="polite" aria-atomic="true"></div> 
+
+  
+
+    <script> 
+
+        // ============================================ 
+
+        // GAME DATA & CONFIGURATION 
+
+        // ============================================ 
+
+  
+
+        const GAME_CONFIG = { 
+
+            title: "Cyber Basics: Hacker POV", 
+
+            topic: "Cybersecurity basics (attacker's perspective)", 
+
+            audience: "Master's students in Digital Business Management", 
+
+            learningOutcomes: [ 
+
+                "Explain why weak passwords are dangerous and how attackers try common guesses.", 
+
+                "Recognize how phishing uses trust + urgency to trick employees.", 
+
+                "Describe the attack lifecycle conceptually (Entry → Foothold → Escalate → Impact).", 
+
+                "Explain why least privilege + monitoring reduce escalation and damage." 
+
+            ] 
+
+        }; 
+
+  
+
+        const INTRO_SLIDES = [ 
+
+            { 
+
+                icon: "🔐", 
+
+                title: "What is Cybersecurity?", 
+
+                text: "Think of cybersecurity like the locks, alarms, and guards protecting a bank. It's all the measures we take to protect computers, networks, and data from unauthorized access or damage.", 
+
+                visual: `<div style="display: flex; justify-content: center; gap: 2rem; padding: 1rem;"> 
+
+                    <div style="text-align: center;"><span style="font-size: 2rem;">🏦</span><br><small>Physical Bank</small></div> 
+
+                    <div style="font-size: 2rem; display: flex; align-items: center;">=</div> 
+
+                    <div style="text-align: center;"><span style="font-size: 2rem;">💻</span><br><small>Digital Systems</small></div> 
+
+                </div> 
+
+                <p style="text-align: center; color: var(--text-muted);">Both need protection from intruders!</p>` 
+
+            }, 
+
+            { 
+
+                icon: "💼", 
+
+                title: "Why It Matters for Digital Business", 
+
+                text: "In Digital Business Management, a single security breach can destroy customer trust, cost millions in damages, and end careers. Understanding how attackers think helps you build better defenses.", 
+
+                visual: `<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; text-align: center;"> 
+
+                    <div><span style="font-size: 2rem;">📉</span><br><small>Financial Loss</small></div> 
+
+                    <div><span style="font-size: 2rem;">🤝</span><br><small>Trust Damage</small></div> 
+
+                    <div><span style="font-size: 2rem;">⚖️</span><br><small>Legal Issues</small></div> 
+
+                </div>` 
+
+            }, 
+
+            { 
+
+                icon: "🔑", 
+
+                title: "Key Concepts", 
+
+                text: "We'll explore three main attack vectors that every business manager should understand:", 
+
+                visual: `<div style="display: flex; flex-direction: column; gap: 1rem;"> 
+
+                    <div style="background: var(--bg-elevated); padding: 1rem; border-radius: 8px; display: flex; align-items: center; gap: 1rem;"> 
+
+                        <span style="font-size: 1.5rem;">🔓</span> 
+
+                        <div><strong>Weak Passwords</strong><br><small>The easiest way in</small></div> 
+
+                    </div> 
+
+                    <div style="background: var(--bg-elevated); padding: 1rem; border-radius: 8px; display: flex; align-items: center; gap: 1rem;"> 
+
+                        <span style="font-size: 1.5rem;">🎣</span> 
+
+                        <div><strong>Phishing</strong><br><small>Tricking humans</small></div> 
+
+                    </div> 
+
+                    <div style="background: var(--bg-elevated); padding: 1rem; border-radius: 8px; display: flex; align-items: center; gap: 1rem;"> 
+
+                        <span style="font-size: 1.5rem;">📈</span> 
+
+                        <div><strong>Escalation</strong><br><small>Growing access</small></div> 
+
+                    </div> 
+
+                </div>` 
+
+            }, 
+
+            { 
+
+                icon: "🎭", 
+
+                title: "Your Mission (Simulation)", 
+
+                text: "You are the new intern in a (fictional) hacker's group. Your first task is to hack a small company with bad cybersecurity measures. This helps managers understand how attacks work so they can prevent them.", 
+
+                visual: `<div class="safety-banner" style="margin: 1rem 0;"> 
+
+                    <span>⚠️</span> 
+
+                    <span>EDUCATIONAL SIMULATION ONLY - No real hacking techniques are taught</span> 
+
+                </div> 
+
+                <p style="text-align: center; color: var(--text-muted);">Goal: Demonstrate how weak controls lead to data exposure, so you understand prevention.</p>` 
+
+            }, 
+
+            { 
+
+                icon: "🎯", 
+
+                title: "The Attack Lifecycle", 
+
+                text: "Attacks typically follow a pattern. Understanding this helps defenders know where to place controls:", 
+
+                visual: `<div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem;"> 
+
+                    <div style="text-align: center; flex: 1;"> 
+
+                        <div style="background: var(--neon-pink); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto;">🚪</div> 
+
+                        <strong style="display: block; margin-top: 0.5rem;">Entry</strong> 
+
+                        <small>Get initial access</small> 
+
+                    </div> 
+
+                    <div style="color: var(--text-muted);">→</div> 
+
+                    <div style="text-align: center; flex: 1;"> 
+
+                        <div style="background: var(--neon-orange); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto;">🦶</div> 
+
+                        <strong style="display: block; margin-top: 0.5rem;">Foothold</strong> 
+
+                        <small>Establish presence</small> 
+
+                    </div> 
+
+                    <div style="color: var(--text-muted);">→</div> 
+
+                    <div style="text-align: center; flex: 1;"> 
+
+                        <div style="background: var(--neon-yellow); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto;">⬆️</div> 
+
+                        <strong style="display: block; margin-top: 0.5rem;">Escalate</strong> 
+
+                        <small>Gain more access</small> 
+
+                    </div> 
+
+                    <div style="color: var(--text-muted);">→</div> 
+
+                    <div style="text-align: center; flex: 1;"> 
+
+                        <div style="background: var(--neon-cyan); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto;">💥</div> 
+
+                        <strong style="display: block; margin-top: 0.5rem;">Impact</strong> 
+
+                        <small>Achieve goal</small> 
+
+                    </div> 
+
+                </div>` 
+
+            }, 
+
+            { 
+
+                icon: "🎮", 
+
+                title: "Ready to Begin?", 
+
+                text: "You'll complete 5 levels, each teaching a different aspect of cybersecurity from the attacker's perspective. Remember: this is about awareness and prevention!", 
+
+                visual: `<div style="text-align: center; padding: 1rem;"> 
+
+                    <p style="color: var(--neon-green); font-size: 1.2rem; margin-bottom: 1rem;">✓ No timers  ✓ No failing  ✓ Learn at your pace</p> 
+
+                    <p style="color: var(--text-muted);">Tip: Click on highlighted terms to see definitions!</p> 
+
+                </div>` 
+
+            } 
+
+        ]; 
+
+  
+
+        const GLOSSARY = { 
+
+            "hash": { 
+
+                term: "Hash", 
+
+                definition: "A one-way mathematical function that converts data into a fixed-size string. Like a blender: you can turn fruit into a smoothie, but you can't turn a smoothie back into the original fruit. Websites store password hashes, not actual passwords." 
+
+            }, 
+
+            "dictionary attack": { 
+
+                term: "Dictionary Attack", 
+
+                definition: "An attack method where the attacker tries common passwords from a list (dictionary) to guess credentials. Works because many people use simple, common passwords." 
+
+            }, 
+
+            "phishing": { 
+
+                term: "Phishing", 
+
+                definition: "A social engineering attack where attackers send fake messages pretending to be someone trustworthy to trick victims into revealing sensitive information or clicking malicious links." 
+
+            }, 
+
+            "trojan": { 
+
+                term: "Trojan", 
+
+                definition: "Malicious software disguised as legitimate software. Named after the Trojan Horse from Greek mythology - it looks harmless but contains hidden dangers." 
+
+            }, 
+
+            "backdoor": { 
+
+                term: "Backdoor", 
+
+                definition: "A hidden method of bypassing normal authentication to gain access to a system. Once installed, attackers can return anytime without needing the original entry method." 
+
+            }, 
+
+            "privilege escalation": { 
+
+                term: "Privilege Escalation", 
+
+                definition: "The process of gaining higher-level permissions than initially obtained. Like an intern finding a way to access the CEO's files." 
+
+            }, 
+
+            "keylogger": { 
+
+                term: "Keylogger", 
+
+                definition: "Software that secretly records every keystroke a user makes. Can capture passwords, messages, and other sensitive data as it's typed." 
+
+            }, 
+
+            "exfiltration": { 
+
+                term: "Exfiltration", 
+
+                definition: "The unauthorized transfer of data out of an organization. The attacker's end goal is often to steal valuable information." 
+
+            }, 
+
+            "logging & monitoring": { 
+
+                term: "Logging & Monitoring", 
+
+                definition: "Security controls that record system activities and alert on suspicious behavior. Like security cameras for your digital systems." 
+
+            }, 
+
+            "domain spoofing": { 
+
+                term: "Domain Spoofing", 
+
+                definition: "Creating a fake website domain that looks similar to a legitimate one. Example: 'g00gle.com' instead of 'google.com' to trick users." 
+
+            }, 
+
+            "social engineering": { 
+
+                term: "Social Engineering", 
+
+                definition: "Manipulating people into breaking security procedures or revealing information. Exploits human psychology rather than technical vulnerabilities." 
+
+            } 
+
+        }; 
+
+  
+
+        const LEVELS = [ 
+
+            { 
+
+                id: 1, 
+
+                title: "HashBreaker", 
+
+                subtitle: "The First Assignment", 
+
+                icon: "🔓", 
+
+                description: "Crack employee passwords using a dictionary attack simulation." 
+
+            }, 
+
+            { 
+
+                id: 2, 
+
+                title: "Phishing Designer", 
+
+                subtitle: "Social Engineering Lab", 
+
+                icon: "🎣", 
+
+                description: "Design a convincing phishing email and learn what makes them effective." 
+
+            }, 
+
+            { 
+
+                id: 3, 
+
+                title: "Virtual Desktop", 
+
+                subtitle: "Foothold Simulator", 
+
+                icon: "🖥️", 
+
+                description: "Identify high-value targets and defender actions on a compromised system." 
+
+            }, 
+
+            { 
+
+                id: 4, 
+
+                title: "Escalation Sequence", 
+
+                subtitle: "Privilege Path", 
+
+                icon: "⬆️", 
+
+                description: "Order the steps of a privilege escalation attack correctly." 
+
+            }, 
+
+            { 
+
+                id: 5, 
+
+                title: "Data Discovery", 
+
+                subtitle: "Exfiltration Prevention", 
+
+                icon: "📊", 
+
+                description: "Classify assets and apply appropriate security controls." 
+
+            } 
+
+        ]; 
+
+  
+
+        // Level 1: HashBreaker Data 
+
+        const EMPLOYEE_TEMPLATES = [ 
+
+            { role: "Senior Administrator", weakness: "role", hint: "User role in company" }, 
+
+            { role: "Junior Developer", weakness: "role", hint: "User role in company" },
+
+            { role: "Finance Assistant", weakness: "keyboard", hint: "Uses keyboard pattern" }, 
+
+            { role: "HR Manager", weakness: "name", hint: "Uses company name variation" }, 
+
+            { role: "IT Support", weakness: "simple", hint: "Common entries in password dictionaries" }, 
+
+            { role: "Marketing Lead", weakness: "year", hint: "Appends year to word" }, 
+
+            { role: "Sales Representative", weakness: "keyboard", hint: "Uses simple keyboard walk" } 
+
+        ]; 
+
+  
+
+        const FIRST_NAMES = ["Alex", "Jordan", "Taylor", "Morgan", "Casey", "Riley", "Quinn", "Avery", "Blake", "Drew"]; 
+
+        const LAST_NAMES = ["Smith", "Johnson", "Williams", "Brown", "Jones", "Miller", "Davis", "Garcia", "Wilson", "Moore"]; 
+
+  
+
+        const PASSWORD_DICTIONARY = [ 
+
+            // Common dictionary passwords (simple weakness)
+
+            "password", "123456", "letmein", 
+
+            // Year variations (year weakness)
+
+            "summer2023", "winter2026", "password2026", 
+
+            // Keyboard patterns (keyboard weakness)
+
+            "qwerty", "qwerty123", "asdfgh", 
+
+            // Company-related (name weakness)
+
+            "techcorp", "company1", 
+
+            // Role-based passwords (role weakness)
+
+            "admin123", "admin", "developer1", "dev123" 
+
+        ];
+
+  
+
+        // Level 2: Phishing Snippets 
+
+        const PHISHING_SNIPPETS = { 
+
+            sender: [ 
+
+                { id: "s1", text: "security@corp-it-update.com", display: "security@corp-it-update.com", isCorrect: true, note: "Spoofed corporate domain" }, 
+
+                { id: "s2", text: "john.smith@gmail.com", display: "john.smith@gmail.com", isCorrect: false, note: "Personal email - suspicious" }, 
+
+                { id: "s3", text: "IT_Support_Team@mail.ru", display: "IT_Support_Team@mail.ru", isCorrect: false, note: "Foreign domain raises red flags" }, 
+
+                { id: "s4", text: "helpdesk@company-secure.net", display: "helpdesk@company-secure.net", isCorrect: true, note: "Professional-looking spoofed domain" } 
+
+            ], 
+
+            subject: [ 
+
+                { id: "su1", text: "URGENT: Your Account Will Be Suspended", display: "URGENT: Account Suspension Notice", isCorrect: true, note: "Creates urgency and fear" }, 
+
+                { id: "su2", text: "You Won a Prize!!!", display: "You Won a Prize!!!", isCorrect: false, note: "Too obvious - spam filter bait" }, 
+
+                { id: "su3", text: "Required: Security Update for Your Workstation", display: "Required: Security Update", isCorrect: true, note: "Appears legitimate and routine" }, 
+
+                { id: "su4", text: "hey check this out lol", display: "hey check this out lol", isCorrect: false, note: "Unprofessional - raises suspicion" } 
+
+            ], 
+
+            body: [ 
+
+                { id: "b1", text: "Dear Employee,\n\nDue to recent security concerns, all staff must verify their credentials within 24 hours. Click the link below to confirm your identity and avoid account suspension.\n\nBest regards,\nIT Security Team", display: "Professional urgent message", isCorrect: true, note: "Authority + urgency + consequence" }, 
+
+                { id: "b2", text: "yo click this link its totally safe trust me bro\n\nwww.virus.com", display: "Casual suspicious message", isCorrect: false, note: "Obvious and unprofessional" }, 
+
+                { id: "b3", text: "CONGRATULATIONS!!! YOU HAVE BEEN SELECTED FOR $1,000,000!!! CLICK NOW!!!", display: "Prize scam message", isCorrect: false, note: "Classic spam - immediately filtered" }, 
+
+                { id: "b4", text: "Hi,\n\nAs part of our quarterly security audit, please install the attached patch to ensure your workstation meets compliance standards. This is required by Friday.\n\nThank you for your cooperation.\nIT Department", display: "Compliance-themed message", isCorrect: true, note: "Routine task + deadline + authority" } 
+
+            ], 
+
+            attachment: [ 
+
+                { id: "a1", text: "Workstation_Patch_v2.04.exe", display: "Workstation_Patch_v2.04.exe", isCorrect: true, note: "Looks like legitimate IT file" }, 
+
+                { id: "a2", text: "virus.bat", display: "virus.bat", isCorrect: false, note: "Obviously malicious name" }, 
+
+                { id: "a3", text: "FREE_MONEY_NOW.exe", display: "FREE_MONEY_NOW.exe", isCorrect: false, note: "Obvious scam filename" }, 
+
+                { id: "a4", text: "Q4_Security_Compliance.pdf.exe", display: "Q4_Security_Compliance.pdf.exe", isCorrect: true, note: "Hidden extension trick" } 
+
+            ], 
+
+            trust: [ 
+
+                { id: "t1", text: "footer", display: "Corporate footer with legal disclaimer", isCorrect: true, note: "Adds legitimacy" }, 
+
+                { id: "t2", text: "refid", display: "Internal reference ID", isCorrect: true, note: "Suggests internal system" }, 
+
+                { id: "t3", text: "none", display: "No trust signals", isCorrect: false, note: "Lacks authenticity markers" }, 
+
+                { id: "t4", text: "signature", display: "IT Manager signature block", isCorrect: true, note: "Personal authority cue" } 
+
+            ] 
+
+        }; 
+
+  
+
+        // Level 3: Desktop Items 
+
+        const DESKTOP_ITEMS = [ 
+
+            { id: "d1", icon: "🔐", label: "Password Manager", isAttackerTarget: true, isDefenderAction: false, explanation: "Contains saved credentials - gold mine for attackers" }, 
+
+            { id: "d2", icon: "🌐", label: "VPN Client", isAttackerTarget: true, isDefenderAction: false, explanation: "VPN credentials allow network access" }, 
+
+            { id: "d3", icon: "👤", label: "Admin Portal", isAttackerTarget: true, isDefenderAction: false, explanation: "Administrative access to systems" }, 
+
+            { id: "d4", icon: "📧", label: "Email Client", isAttackerTarget: false, isDefenderAction: false, explanation: "Useful but lower priority than credentials" }, 
+
+            { id: "d5", icon: "📁", label: "Downloads", isAttackerTarget: false, isDefenderAction: false, explanation: "May contain sensitive files" }, 
+
+            { id: "d6", icon: "🔌", label: "Disconnect Network", isAttackerTarget: false, isDefenderAction: true, explanation: "Isolates compromised machine" }, 
+
+            { id: "d7", icon: "📞", label: "Report to IT", isAttackerTarget: false, isDefenderAction: true, explanation: "Alert security team immediately" }, 
+
+            { id: "d8", icon: "🔄", label: "Reset Passwords", isAttackerTarget: false, isDefenderAction: true, explanation: "Invalidate potentially stolen credentials" }, 
+
+            { id: "d9", icon: "📋", label: "Check Logs", isAttackerTarget: false, isDefenderAction: true, explanation: "Investigate what was accessed" }, 
+
+            { id: "d10", icon: "🗂️", label: "Documents", isAttackerTarget: false, isDefenderAction: false, explanation: "General files - lower priority" } 
+
+        ]; 
+
+  
+
+        // Level 4: Escalation Steps 
+
+        const ESCALATION_STEPS = [ 
+
+            { id: "e1", title: "Deploy Keylogger", description: "Install software to capture keystrokes", order: 1 }, 
+
+            { id: "e2", title: "Bypass Security Filters", description: "Evade detection mechanisms", order: 2 }, 
+
+            { id: "e3", title: "Capture Admin Credentials", description: "Wait for admin to log in", order: 3 }, 
+
+            { id: "e4", title: "Exfiltrate Data", description: "Transfer valuable data out", order: 4 } 
+
+        ]; 
+
+  
+
+        // Level 5: Assets 
+
+        const BUSINESS_ASSETS = [ 
+
+            { id: "a1", icon: "👥", name: "Customer Database", description: "Names, emails, purchase history of all customers", correctClass: "confidential", correctControls: ["encryption", "access-control"] }, 
+
+            { id: "a2", icon: "📋", name: "HR Records", description: "Employee salaries, SSNs, performance reviews", correctClass: "confidential", correctControls: ["access-control", "mfa"] }, 
+
+            { id: "a3", icon: "📈", name: "Financial Forecasts", description: "Q4 revenue projections and strategy", correctClass: "confidential", correctControls: ["encryption", "access-control"] }, 
+
+            { id: "a4", icon: "🚀", name: "Product Roadmap", description: "Upcoming features and release dates", correctClass: "internal", correctControls: ["access-control", "dlp"] }, 
+
+            { id: "a5", icon: "📰", name: "Press Releases", description: "Public announcements and marketing materials", correctClass: "public", correctControls: ["monitoring"] } 
+
+        ]; 
+
+  
+
+        const CLASSIFICATION_OPTIONS = [ 
+
+            { value: "", label: "Select classification..." }, 
+
+            { value: "public", label: "Public - Can be shared freely" }, 
+
+            { value: "internal", label: "Internal - Company staff only" }, 
+
+            { value: "confidential", label: "Confidential - Restricted access" } 
+
+        ]; 
+
+  
+
+        const CONTROL_OPTIONS = [
+            { value: "", label: "Select a control...", description: "" },
+            { value: "encryption", label: "Encryption", description: "Scrambles data so only authorized users with the key can read it" },
+            { value: "access-control", label: "Access Control", description: "Limits who can view or edit data based on their role" },
+            { value: "mfa", label: "Multi-Factor Auth", description: "Requires multiple verification methods (password + phone) to access" },
+            { value: "monitoring", label: "Activity Monitoring", description: "Tracks and logs who accesses data and what they do with it" }
+        ];
+
+  
+
+        // ============================================ 
+
+        // GAME STATE 
+
+        // ============================================ 
+
+  
+
+        let gameState = {
+            currentLevel: 0, // 0 = intro
+            levelsCompleted: [],
+            currentSlide: 0,
+            playerName: "", // Player name asked at start
+            
+            // Level 1 state
+            level1: {
+                employees: [],
+                selectedEmployee: null,
+                selectedPassword: null,
+                crackedEmployees: []
+            },
+            
+            // Level 2 state
+            level2: {
+                selectedSnippets: {},
+                testAttempts: 0
+            },
+            
+            // Level 3 state
+            level3: {
+                selectedAttacker: [],
+                selectedDefender: []
+            },
+            
+            // Level 4 state
+            level4: {
+                currentOrder: []
+            },
+            
+            // Level 5 state
+            level5: {
+                classifications: {},
+                controls: {}
+            },
+            
+            // Certificate
+            certificateName: ""
+        };
+
+  
+
+        // ============================================ 
+
+        // UTILITY FUNCTIONS 
+
+        // ============================================ 
+
+  
+
+        function announce(message) { 
+
+            document.getElementById('liveRegion').textContent = message; 
+
+        } 
+
+  
+
+        function toyHash(input) { 
+
+            // Simple deterministic hash for educational purposes 
+
+            let hash = 0; 
+
+            for (let i = 0; i < input.length; i++) { 
+
+                const char = input.charCodeAt(i); 
+
+                hash = ((hash << 5) - hash) + char; 
+
+                hash = hash & hash; 
+
+            } 
+
+            // Convert to hex-like string 
+
+            const hex = Math.abs(hash).toString(16).padStart(8, '0'); 
+
+            return `SIM${hex}${hex.split('').reverse().join('')}`.toUpperCase().substring(0, 32); 
+
+        } 
+
+  
+
+        function shuffleArray(array) { 
+
+            const shuffled = [...array]; 
+
+            for (let i = shuffled.length - 1; i > 0; i--) { 
+
+                const j = Math.floor(Math.random() * (i + 1)); 
+
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]; 
+
+            } 
+
+            return shuffled; 
+
+        } 
+
+  
+
+        function getRandomElement(array) { 
+
+            return array[Math.floor(Math.random() * array.length)]; 
+
+        } 
+
+  
+
+        function updateProgress() { 
+
+            const progress = (gameState.levelsCompleted.length / LEVELS.length) * 100; 
+
+            document.getElementById('progressFill').style.width = `${progress}%`; 
+
+            document.getElementById('progressText').textContent = `${Math.round(progress)}%`; 
+
+        } 
+
+  
+
+        function renderLevelNav() { 
+
+            const container = document.getElementById('levelNavItems'); 
+
+            container.innerHTML = LEVELS.map(level => { 
+
+                const isCompleted = gameState.levelsCompleted.includes(level.id); 
+
+                const isActive = gameState.currentLevel === level.id; 
+
+                const isLocked = !isCompleted && level.id > 1 && !gameState.levelsCompleted.includes(level.id - 1); 
+
+                 
+
+                let statusIcon = '○'; 
+
+                if (isCompleted) statusIcon = '✓'; 
+
+                if (isActive) statusIcon = '▶'; 
+
+                if (isLocked) statusIcon = '🔒'; 
+
+                 
+
+                return ` 
+
+                    <div class="level-item ${isActive ? 'active' : ''} ${isCompleted ? 'completed' : ''} ${isLocked ? 'locked' : ''}" 
+
+                         onclick="${isLocked ? '' : `loadLevel(${level.id})`}" 
+
+                         tabindex="${isLocked ? -1 : 0}" 
+
+                         role="button" 
+
+                         aria-disabled="${isLocked}"> 
+
+                        <span class="level-status">${statusIcon}</span> 
+
+                        <div class="level-info"> 
+
+                            <div class="level-title">${level.icon} ${level.title}</div> 
+
+                            <div class="level-subtitle">${level.subtitle}</div> 
+
+                        </div> 
+
+                    </div> 
+
+                `; 
+
+            }).join(''); 
+
+        } 
+
+  
+
+        // ============================================ 
+
+        // MODAL FUNCTIONS 
+
+        // ============================================ 
+
+  
+
+        function showModal(title, content, footerHTML = '') { 
+
+            document.getElementById('modalTitle').textContent = title; 
+
+            document.getElementById('modalBody').innerHTML = content; 
+
+            document.getElementById('modalFooter').innerHTML = footerHTML || '<button class="btn btn-primary" onclick="closeModal()">Close</button>'; 
+
+            document.getElementById('modalOverlay').classList.add('active'); 
+
+            announce(`Modal opened: ${title}`); 
+
+        } 
+
+  
+
+        function closeModal(event) { 
+
+            if (event && event.target !== event.currentTarget) return; 
+
+            document.getElementById('modalOverlay').classList.remove('active'); 
+
+            announce('Modal closed'); 
+
+        } 
+
+  
+
+        // ============================================ 
+
+        // INTRO SLIDESHOW 
+
+        // ============================================ 
+
+  
+
+        function showIntro() { 
+
+            gameState.currentLevel = 0; 
+
+            gameState.currentSlide = 0; 
+
+            renderIntro(); 
+
+            renderLevelNav(); 
+
+        } 
+
+  
+
+        function renderIntro() { 
+
+            const main = document.getElementById('mainContent'); 
+
+            main.innerHTML = ` 
+
+                <div class="intro-container"> 
+
+                    <div class="safety-banner"> 
+
+                        <span>⚠️</span> 
+
+                        <span>EDUCATIONAL SIMULATION - This game teaches cybersecurity awareness. No real hacking techniques are provided.</span> 
+
+                    </div> 
+
+                     
+
+                    <div class="card"> 
+
+                        ${INTRO_SLIDES.map((slide, index) => ` 
+
+                            <div class="slide ${index === gameState.currentSlide ? 'active' : ''}" data-slide="${index}"> 
+
+                                <div class="slide-content"> 
+
+                                    <div class="slide-icon">${slide.icon}</div> 
+
+                                    <h1 class="slide-title">${slide.title}</h1> 
+
+                                    <p class="slide-text">${slide.text}</p> 
+
+                                    <div class="slide-visual">${slide.visual}</div> 
+
+                                </div> 
+
+                            </div> 
+
+                        `).join('')} 
+
+                         
+
+                        <div class="slide-nav"> 
+
+                            <button class="btn btn-secondary" onclick="prevSlide()" ${gameState.currentSlide === 0 ? 'disabled' : ''}> 
+
+                                ← Previous 
+
+                            </button> 
+
+                             
+
+                            <div class="slide-dots"> 
+
+                                ${INTRO_SLIDES.map((_, i) => ` 
+
+                                    <button class="slide-dot ${i === gameState.currentSlide ? 'active' : ''}"  
+
+                                            onclick="goToSlide(${i})" 
+
+                                            aria-label="Go to slide ${i + 1}"></button> 
+
+                                `).join('')} 
+
+                            </div> 
+
+                             
+
+                            ${gameState.currentSlide === INTRO_SLIDES.length - 1  
+
+                                ? '<button class="btn btn-success btn-lg" onclick="loadLevel(1)">Start Level 1 →</button>' 
+
+                                : '<button class="btn btn-primary" onclick="nextSlide()">Next →</button>' 
+
+                            } 
+
+                        </div> 
+
+                    </div> 
+
+                </div> 
+
+            `; 
+
+        } 
+
+  
+
+        function nextSlide() { 
+
+            if (gameState.currentSlide < INTRO_SLIDES.length - 1) { 
+
+                gameState.currentSlide++; 
+
+                renderIntro(); 
+
+                announce(`Slide ${gameState.currentSlide + 1} of ${INTRO_SLIDES.length}`); 
+
+            } 
+
+        } 
+
+  
+
+        function prevSlide() { 
+
+            if (gameState.currentSlide > 0) { 
+
+                gameState.currentSlide--; 
+
+                renderIntro(); 
+
+                announce(`Slide ${gameState.currentSlide + 1} of ${INTRO_SLIDES.length}`); 
+
+            } 
+
+        } 
+
+  
+
+        function goToSlide(index) { 
+
+            gameState.currentSlide = index; 
+
+            renderIntro(); 
+
+            announce(`Slide ${gameState.currentSlide + 1} of ${INTRO_SLIDES.length}`); 
+
+        } 
+
+  
+
+        // ============================================ 
+
+        // GLOSSARY 
+
+        // ============================================ 
+
+  
+
+        function showGlossary() { 
+
+            const content = ` 
+
+                <div class="glossary-list"> 
+
+                    ${Object.values(GLOSSARY).map(item => ` 
+
+                        <div class="glossary-item"> 
+
+                            <div class="glossary-item-term">${item.term}</div> 
+
+                            <div class="glossary-item-def">${item.definition}</div> 
+
+                        </div> 
+
+                    `).join('')} 
+
+                </div> 
+
+            `; 
+
+            showModal('📚 Glossary', content); 
+
+        } 
+
+  
+
+        function makeGlossaryTerm(term) {
+            const key = term.toLowerCase();
+            if (GLOSSARY[key]) {
+                const id = 'glossary-' + Math.random().toString(36).substr(2, 9);
+                return `<span class="glossary-term" tabindex="0" data-glossary-id="${id}" data-glossary-key="${key}" onmouseenter="showGlossaryPopup(this)" onmouseleave="hideGlossaryPopup()" onfocus="showGlossaryPopup(this)" onblur="hideGlossaryPopup()">${term}</span>`;
+            }
+            return term;
+        }
+
+        // Global popup element that lives outside the modal
+        let globalGlossaryPopup = null;
+        
+        function getGlobalGlossaryPopup() {
+            if (!globalGlossaryPopup) {
+                globalGlossaryPopup = document.createElement('div');
+                globalGlossaryPopup.className = 'glossary-popup-global';
+                globalGlossaryPopup.style.cssText = `
+                    position: fixed;
+                    background: var(--bg-panel);
+                    border: 1px solid var(--neon-yellow);
+                    border-radius: var(--border-radius);
+                    padding: var(--space-sm) var(--space-md);
+                    font-size: 0.875rem;
+                    color: var(--text-primary);
+                    white-space: normal;
+                    min-width: 280px;
+                    max-width: 400px;
+                    z-index: 99999;
+                    box-shadow: 0 0 20px rgba(255, 221, 0, 0.2);
+                    opacity: 0;
+                    visibility: hidden;
+                    pointer-events: none;
+                    transition: opacity 0.2s ease, visibility 0.2s ease;
+                `;
+                document.body.appendChild(globalGlossaryPopup);
+            }
+            return globalGlossaryPopup;
+        }
+        
+        function showGlossaryPopup(termElement) {
+            const key = termElement.getAttribute('data-glossary-key');
+            if (!key || !GLOSSARY[key]) return;
+            
+            const popup = getGlobalGlossaryPopup();
+            popup.textContent = GLOSSARY[key].definition;
+            
+            // Make visible to measure
+            popup.style.visibility = 'hidden';
+            popup.style.opacity = '0';
+            popup.style.display = 'block';
+            
+            const rect = termElement.getBoundingClientRect();
+            const popupRect = popup.getBoundingClientRect();
+            const popupHeight = popupRect.height || 80;
+            const popupWidth = popupRect.width || 340;
+            
+            // Calculate horizontal position (centered on term)
+            let left = rect.left + (rect.width / 2) - (popupWidth / 2);
+            
+            // Keep within horizontal bounds
+            if (left < 10) left = 10;
+            if (left + popupWidth > window.innerWidth - 10) {
+                left = window.innerWidth - popupWidth - 10;
+            }
+            
+            // Calculate vertical position - prefer below to avoid cutoff
+            const spaceAbove = rect.top;
+            const spaceBelow = window.innerHeight - rect.bottom;
+            
+            if (spaceBelow >= popupHeight + 15 || spaceBelow >= spaceAbove) {
+                popup.style.top = (rect.bottom + 8) + 'px';
+            } else {
+                popup.style.top = (rect.top - popupHeight - 8) + 'px';
+            }
+            
+            popup.style.left = left + 'px';
+            popup.style.visibility = 'visible';
+            popup.style.opacity = '1';
+        }
+        
+        function hideGlossaryPopup() {
+            const popup = getGlobalGlossaryPopup();
+            popup.style.opacity = '0';
+            popup.style.visibility = 'hidden';
+        }
+
+  
+
+        // ============================================ 
+
+        // LEVEL LOADING 
+
+        // ============================================ 
+
+  
+
+        function loadLevel(levelId) { 
+
+            gameState.currentLevel = levelId; 
+
+            renderLevelNav(); 
+
+             
+
+            switch(levelId) { 
+
+                case 1: renderLevel1(); break; 
+
+                case 2: renderLevel2(); break; 
+
+                case 3: renderLevel3(); break; 
+
+                case 4: renderLevel4(); break; 
+
+                case 5: renderLevel5(); break; 
+
+                case 6: renderCertificate(); break; 
+
+                default: showIntro(); 
+
+            } 
+
+             
+
+            announce(`Level ${levelId} loaded`); 
+
+        } 
+
+  
+
+        function completeLevel(levelId) { 
+
+            if (!gameState.levelsCompleted.includes(levelId)) { 
+
+                gameState.levelsCompleted.push(levelId); 
+
+            } 
+
+            updateProgress(); 
+
+            renderLevelNav(); 
+
+            showLessonsLearned(levelId); 
+
+        } 
+
+  
+
+        function showLessonsLearned(levelId) { 
+
+            const lessons = { 
+
+                1: { 
+
+                    icon: "🔓", 
+
+                    title: "Level 1 Complete: HashBreaker", 
+
+                    items: [ 
+
+                        "Weak passwords are the easiest entry point for attackers", 
+
+                        "Dictionary attacks work because people use predictable patterns" 
+
+                    ], 
+
+                    dbm: "As a business manager, enforce password policies: minimum length, complexity requirements, and regular rotation. Consider implementing password managers for your team." 
+
+                }, 
+
+                2: { 
+
+                    icon: "🎣", 
+
+                    title: "Level 2 Complete: Phishing Designer", 
+
+                    items: [ 
+
+                        "Phishing exploits trust, authority, and urgency", 
+
+                        "Legitimate-looking emails can contain hidden dangers" 
+
+                    ], 
+
+                    dbm: "Implement security awareness training for all employees. Use email filtering and establish verification procedures for sensitive requests." 
+
+                }, 
+
+                3: { 
+
+                    icon: "🖥️", 
+
+                    title: "Level 3 Complete: Virtual Desktop", 
+
+                    items: [ 
+
+                        "Attackers target credentials and high-privilege access", 
+
+                        "Quick defender response can limit damage" 
+
+                    ], 
+
+                    dbm: "Develop incident response procedures. Know what to do in the first minutes of detecting a breach - isolation, reporting, and credential reset." 
+
+                }, 
+
+                4: { 
+
+                    icon: "⬆️", 
+
+                    title: "Level 4 Complete: Escalation Sequence", 
+
+                    items: [ 
+
+                        "Attacks follow predictable patterns: deploy, capture, escalate, exfiltrate", 
+
+                        "Each stage offers detection and prevention opportunities" 
+
+                    ], 
+
+                    dbm: "Implement least privilege access - employees should only have access to what they need. Deploy monitoring at each potential escalation point." 
+
+                }, 
+
+                5: { 
+
+                    icon: "📊", 
+
+                    title: "Level 5 Complete: Data Discovery", 
+
+                    items: [ 
+
+                        "Not all data is equal - classify by sensitivity", 
+
+                        "Controls should match the value and risk of each asset" 
+
+                    ], 
+
+                    dbm: "Create a data classification policy. Map your critical assets and ensure appropriate controls. Regular audits ensure compliance." 
+
+                } 
+
+            }; 
+
+  
+
+            const lesson = lessons[levelId]; 
+
+            const nextLevel = levelId < 5 ? levelId + 1 : 6; 
+
+            const nextLabel = levelId < 5 ? `Start Level ${nextLevel}` : 'View Certificate'; 
+
+  
+
+            const content = ` 
+
+                <div class="lessons-container"> 
+
+                    <div class="lessons-icon">${lesson.icon}</div> 
+
+                    <h2 class="lessons-title">${lesson.title}</h2> 
+
+                     
+
+                    <div class="lessons-list"> 
+
+                        ${lesson.items.map(item => ` 
+
+                            <div class="lesson-item"> 
+
+                                <span class="lesson-icon">✓</span> 
+
+                                <span>${item}</span> 
+
+                            </div> 
+
+                        `).join('')} 
+
+                    </div> 
+
+                     
+
+                    <div class="dbm-connection"> 
+
+                        <div class="dbm-title">💼 Connection to Digital Business Management</div> 
+
+                        <p>${lesson.dbm}</p> 
+
+                    </div> 
+
+                </div> 
+
+            `; 
+
+  
+
+            showModal( 
+
+                '🎉 Level Complete!',  
+
+                content, 
+
+                `<button class="btn btn-success" onclick="closeModal(); loadLevel(${nextLevel});">${nextLabel} →</button>` 
+
+            ); 
+
+        } 
+
+  
+
+        // ============================================ 
+
+        // LEVEL 1: HASHBREAKER 
+
+        // ============================================ 
+
+  
+
+        function generateLevel1Data() { 
+
+            // Generate 3-5 random employees 
+
+            const numEmployees = 3 + Math.floor(Math.random() * 3); 
+
+            const templates = shuffleArray(EMPLOYEE_TEMPLATES).slice(0, numEmployees); 
+
+             
+
+            gameState.level1.employees = templates.map((template, index) => { 
+
+                const firstName = getRandomElement(FIRST_NAMES); 
+
+                const lastName = getRandomElement(LAST_NAMES); 
+
+                const userId = `${firstName.toLowerCase()}.${lastName.toLowerCase()}`; 
+
+                 
+
+                // Generate password based on weakness type 
+
+                let password; 
+
+                switch(template.weakness) { 
+
+                    case 'year': 
+
+                        password = getRandomElement(['summer2023', 'winter2026', 'password2026']); 
+
+                        break;
+
+                    case 'simple': 
+
+                        password = getRandomElement(['password', '123456', 'letmein']); 
+
+                        break;
+
+                    case 'role': 
+
+                        password = getRandomElement(['admin123', 'admin', 'developer1', 'dev123']); 
+
+                        break;
+
+                    case 'keyboard': 
+
+                        password = getRandomElement(['qwerty', 'qwerty123', 'asdfgh']); 
+
+                        break; 
+
+                    case 'name': 
+
+                        password = getRandomElement(['techcorp', 'company1']); 
+
+                        break;
+
+                    default: 
+
+                        password = 'password123'; 
+
+                } 
+
+                 
+
+                return { 
+
+                    id: index, 
+
+                    name: `${firstName} ${lastName}`, 
+
+                    role: template.role, 
+
+                    userId: userId, 
+
+                    password: password, 
+
+                    hash: toyHash(userId + ':' + password), 
+
+                    hint: template.hint, 
+
+                    weakness: template.weakness 
+
+                }; 
+
+            }); 
+
+             
+
+            gameState.level1.crackedEmployees = []; 
+
+            gameState.level1.selectedEmployee = null; 
+
+            gameState.level1.selectedPassword = null; 
+
+        } 
+
+  
+
+        function renderLevel1() { 
+
+            if (gameState.level1.employees.length === 0) { 
+
+                generateLevel1Data(); 
+
+            } 
+
+             
+
+            const main = document.getElementById('mainContent'); 
+
+            main.innerHTML = ` 
+
+                <div class="safety-banner"> 
+
+                    <span>⚠️</span> 
+
+                    <span>SIMULATED HASHES - These are toy examples for education only. Real password cracking is illegal without authorization.</span> 
+
+                </div> 
+
+                 
+
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-lg);"> 
+
+                    <div> 
+
+                        <h1 style="color: var(--neon-cyan); margin-bottom: var(--space-xs);">🔓 Level 1: HashBreaker</h1> 
+
+                        <p style="color: var(--text-muted);">Crack the employee passwords using dictionary attack simulation</p> 
+
+                    </div> 
+
+                    <button class="btn btn-warning" onclick="generateLevel1Data(); renderLevel1();"> 
+
+                        🎲 New Assignment 
+
+                    </button> 
+
+                </div> 
+
+                 
+
+                <div class="card" style="margin-bottom: var(--space-lg);"> 
+
+                    <div class="card-header"> 
+
+                        <span class="card-title">📋 Mission Brief</span> 
+
+                    </div> 
+
+                    <p style="color: var(--text-secondary);"> 
+
+                        You've intercepted a database of ${makeGlossaryTerm('hash')}ed passwords from TargetCorp.  
+
+                        Your task: use a ${makeGlossaryTerm('dictionary attack')} to recover the original passwords  
+
+                        and demonstrate why weak passwords are dangerous. 
+
+                    </p> 
+
+                    <div class="terminal-panel" style="margin-top: var(--space-md);"> 
+
+                        <div class="terminal-line"> 
+
+                            <span class="terminal-prompt">$</span> 
+
+                            <span>A hash is like a fingerprint - you can't reverse it, but you can compare it!</span> 
+
+                        </div> 
+
+                        <div class="terminal-line"> 
+
+                            <span class="terminal-prompt">$</span> 
+
+                            <span>Try hashing common passwords and see if any match the intercepted hashes.</span> 
+
+                        </div> 
+
+                    </div> 
+
+                </div> 
+
+                 
+
+                <div class="hashbreaker-layout"> 
+
+                    <div> 
+
+                        <div class="card"> 
+
+                            <div class="card-header"> 
+
+                                <span class="card-title">👥 Employee Database</span> 
+
+                                <span style="color: var(--text-muted);">${gameState.level1.crackedEmployees.length}/${gameState.level1.employees.length} cracked</span> 
+
+                            </div> 
+
+                            <div class="employee-list"> 
+
+                                ${gameState.level1.employees.map(emp => { 
+
+                                    const isCracked = gameState.level1.crackedEmployees.includes(emp.id); 
+
+                                    const isSelected = gameState.level1.selectedEmployee === emp.id; 
+
+                                    return ` 
+
+                                        <div class="employee-card ${isCracked ? 'cracked' : ''} ${isSelected ? 'selected' : ''}" 
+
+                                             onclick="${isCracked ? '' : `selectEmployee(${emp.id})`}" 
+
+                                             tabindex="0" 
+
+                                             role="button"> 
+
+                                            <div class="employee-avatar">${emp.name.charAt(0)}</div> 
+
+                                            <div class="employee-info"> 
+
+                                                <div class="employee-name">${emp.name}</div> 
+
+                                                <div class="employee-role">${emp.role}</div> 
+
+                                                <div class="hash-display">${emp.hash}</div> 
+
+                                            </div> 
+
+                                            <div class="employee-status">${isCracked ? '✓' : '🔒'}</div> 
+
+                                        </div> 
+
+                                    `; 
+
+                                }).join('')} 
+
+                            </div> 
+
+                        </div> 
+
+                    </div> 
+
+                     
+
+                    <div> 
+
+                        <div class="card" style="margin-bottom: var(--space-lg);"> 
+
+                            <div class="card-header"> 
+
+                                <span class="card-title">💡 AI Analysis Hint</span> 
+
+                            </div> 
+
+                            <div id="hintArea" style="color: var(--text-secondary);"> 
+
+                                ${gameState.level1.selectedEmployee !== null  
+
+                                    ? `Target: <strong>${gameState.level1.employees.find(e => e.id === gameState.level1.selectedEmployee)?.name}</strong><br> 
+
+                                       Analysis: ${gameState.level1.employees.find(e => e.id === gameState.level1.selectedEmployee)?.hint}` 
+
+                                    : 'Select a target to analyze their password pattern...'} 
+
+                            </div> 
+
+                        </div> 
+
+                         
+
+                        <div class="card"> 
+
+                            <div class="card-header"> 
+
+                                <span class="card-title">📖 Password Dictionary</span> 
+
+                            </div> 
+
+                            <div class="dictionary-grid"> 
+
+                                ${PASSWORD_DICTIONARY.map(pwd => ` 
+
+                                    <button class="dictionary-word ${gameState.level1.selectedPassword === pwd ? 'selected' : ''}" 
+
+                                            onclick="selectPassword('${pwd}')" 
+
+                                            ${gameState.level1.selectedEmployee === null ? 'disabled' : ''}> 
+
+                                        ${pwd} 
+
+                                    </button> 
+
+                                `).join('')} 
+
+                            </div> 
+
+                             
+
+                            <div id="hashCompare" class="hash-compare" style="display: ${gameState.level1.selectedPassword ? 'block' : 'none'};"> 
+
+                                <div class="hash-row"> 
+
+                                    <span class="hash-label">Target Hash:</span> 
+
+                                    <span class="hash-value" id="targetHash">-</span> 
+
+                                </div> 
+
+                                <div class="hash-row"> 
+
+                                    <span class="hash-label">Guess Hash:</span> 
+
+                                    <span class="hash-value" id="guessHash">-</span> 
+
+                                </div> 
+
+                                <div class="hash-row"> 
+
+                                    <span class="hash-label">Result:</span> 
+
+                                    <span id="matchResult">-</span> 
+
+                                </div> 
+
+                            </div> 
+
+                             
+
+                            <div style="margin-top: var(--space-md);"> 
+
+                                <button class="btn btn-primary"  
+
+                                        onclick="runHashMatch()" 
+
+                                        ${!gameState.level1.selectedPassword || gameState.level1.selectedEmployee === null ? 'disabled' : ''}> 
+
+                                    🔍 Run Hash Match 
+
+                                </button> 
+
+                            </div> 
+
+                        </div> 
+
+                    </div> 
+
+                </div> 
+
+                 
+
+                <div id="level1Feedback"></div> 
+
+            `; 
+
+        } 
+
+  
+
+        function selectEmployee(id) { 
+
+            if (gameState.level1.crackedEmployees.includes(id)) return; 
+
+            gameState.level1.selectedEmployee = id; 
+
+            gameState.level1.selectedPassword = null; 
+
+            renderLevel1(); 
+
+            announce(`Selected ${gameState.level1.employees.find(e => e.id === id)?.name}`); 
+
+        } 
+
+  
+
+        function selectPassword(pwd) { 
+
+            gameState.level1.selectedPassword = pwd; 
+
+             
+
+            const emp = gameState.level1.employees.find(e => e.id === gameState.level1.selectedEmployee); 
+
+            if (emp) { 
+
+                document.getElementById('hashCompare').style.display = 'block'; 
+
+                document.getElementById('targetHash').textContent = emp.hash; 
+
+                document.getElementById('guessHash').textContent = toyHash(emp.userId + ':' + pwd); 
+
+                document.getElementById('matchResult').textContent = '-'; 
+
+                document.getElementById('matchResult').className = ''; 
+
+            } 
+
+             
+
+            // Update button states 
+
+            document.querySelectorAll('.dictionary-word').forEach(btn => { 
+
+                btn.classList.toggle('selected', btn.textContent.trim() === pwd); 
+
+            }); 
+
+             
+
+            document.querySelector('button[onclick="runHashMatch()"]').disabled = false; 
+
+            announce(`Selected password: ${pwd}`); 
+
+        } 
+
+  
+
+        function runHashMatch() { 
+
+            const emp = gameState.level1.employees.find(e => e.id === gameState.level1.selectedEmployee); 
+
+            if (!emp || !gameState.level1.selectedPassword) return; 
+
+             
+
+            const guessHash = toyHash(emp.userId + ':' + gameState.level1.selectedPassword); 
+
+            const isMatch = guessHash === emp.hash; 
+
+             
+
+            const resultEl = document.getElementById('matchResult'); 
+
+             
+
+            if (isMatch) { 
+
+                resultEl.textContent = '✓ MATCH FOUND!'; 
+
+                resultEl.className = 'hash-match'; 
+
+                 
+
+                gameState.level1.crackedEmployees.push(emp.id); 
+
+                 
+
+                // Show weakness report 
+
+                showModal( 
+
+                    '🔓 Password Cracked!', 
+
+                    ` 
+
+                        <div style="text-align: center; margin-bottom: var(--space-lg);"> 
+
+                            <div style="font-size: 3rem; margin-bottom: var(--space-md);">✓</div> 
+
+                            <h3 style="color: var(--neon-green);">${emp.name}'s Password: ${emp.password}</h3> 
+
+                        </div> 
+
+                         
+
+                        <div class="feedback feedback-warning"> 
+
+                            <span>⚠️</span> 
+
+                            <div> 
+
+                                <strong>Why was this weak?</strong><br> 
+
+                                ${getWeaknessExplanation(emp.weakness, emp.password)} 
+
+                            </div> 
+
+                        </div> 
+
+                         
+
+                        <div class="feedback feedback-info"> 
+
+                            <span>💼</span> 
+
+                            <div> 
+
+                                <strong>Business Risk:</strong><br> 
+
+                                A ${emp.role} account could give attackers access to sensitive systems and data. 
+
+                            </div> 
+
+                        </div> 
+
+                    `, 
+
+                    `<button class="btn btn-primary" onclick="closeModal(); renderLevel1(); checkLevel1Complete();">Continue</button>` 
+
+                ); 
+
+            } else { 
+
+                resultEl.textContent = '✗ No match'; 
+
+                resultEl.className = 'hash-nomatch'; 
+
+                 
+
+                // Check for near-miss 
+
+                const correctPwd = emp.password; 
+
+                const nearMiss = isNearMiss(gameState.level1.selectedPassword, correctPwd); 
+
+                 
+
+                if (nearMiss) { 
+
+                    const feedbackEl = document.getElementById('level1Feedback'); 
+
+                    feedbackEl.innerHTML = ` 
+
+                        <div class="feedback feedback-info"> 
+
+                            <span>💡</span> 
+
+                            <span>Close! You're on the right track. ${nearMiss}</span> 
+
+                        </div> 
+
+                    `; 
+
+                } 
+
+                 
+
+                announce('No match found. Try another password.'); 
+
+            } 
+
+        } 
+
+  
+
+        function isNearMiss(guess, correct) { 
+
+            if (guess.toLowerCase() === correct.toLowerCase() && guess !== correct) { 
+
+                return "Check the capitalization!"; 
+
+            } 
+
+            if (guess.replace(/\d+$/, '') === correct.replace(/\d+$/, '')) { 
+
+                return "The base word is correct, but check the numbers!"; 
+
+            } 
+
+            if (correct.includes(guess) || guess.includes(correct)) { 
+
+                return "Part of your guess matches - keep thinking!"; 
+
+            } 
+
+            return null; 
+
+        } 
+
+  
+
+        function getWeaknessExplanation(weakness, password) { 
+
+            const explanations = { 
+
+                'year': `The password "${password}" includes a predictable year. Attackers always try current and recent years.`, 
+
+                'simple': `The password "${password}" is one of the most commonly used passwords worldwide. It appears in every dictionary attack list.`, 
+
+                'keyboard': `The password "${password}" follows a keyboard pattern. These are among the first guesses attackers try.`, 
+
+                'name': `The password "${password}" is related to the company name. Attackers research their targets and try obvious variations.` 
+
+            }; 
+
+            return explanations[weakness] || `This password follows a predictable pattern that attackers can easily guess.`; 
+
+        } 
+
+  
+
+        function checkLevel1Complete() { 
+
+            if (gameState.level1.crackedEmployees.length === gameState.level1.employees.length) { 
+
+                completeLevel(1); 
+
+            } 
+
+        } 
+
+  
+
+        // ============================================ 
+
+        // LEVEL 2: PHISHING DESIGNER 
+
+        // ============================================ 
+
+  
+
+        function renderLevel2() { 
+
+            if (Object.keys(gameState.level2.selectedSnippets).length === 0) { 
+
+                gameState.level2.selectedSnippets = {}; 
+
+                gameState.level2.testAttempts = 0; 
+
+            } 
+
+             
+
+            const main = document.getElementById('mainContent');
+
+            const selected = gameState.level2.selectedSnippets;
+
+            const noTrustPlaceholder = '<span style="color: #9ca3af; font-style: italic;">(No trust signals included)</span>';
+            const trustKey = selected.trust?.text;
+            const trustFooterInner =
+                trustKey === 'none'
+                    ? noTrustPlaceholder
+                    : (trustKey ? getTrustSignalText(trustKey) : '') || noTrustPlaceholder;
+            const trustFooterHtml = selected.trust
+                ? `<div class="email-footer">${trustFooterInner}</div>`
+                : '';
+
+            main.innerHTML = `
+                <div class="safety-banner"> 
+
+                    <span>⚠️</span> 
+
+                    <span>AWARENESS TRAINING - Learn to recognize phishing tactics. Never use these techniques for malicious purposes.</span> 
+
+                </div> 
+
+                 
+
+                <div style="margin-bottom: var(--space-lg);"> 
+
+                    <h1 style="color: var(--neon-cyan); margin-bottom: var(--space-xs);">🎣 Level 2: Phishing Designer</h1> 
+
+                    <p style="color: var(--text-muted);">Design a convincing ${makeGlossaryTerm('phishing')} email to understand ${makeGlossaryTerm('social engineering')} tactics</p> 
+
+                </div> 
+
+                 
+
+                <div class="phishing-layout"> 
+
+                    <!-- Snippets Sidebar --> 
+
+                    <div class="snippets-sidebar card"> 
+
+                        <div class="card-header"> 
+
+                            <span class="card-title">🧩 Email Components</span> 
+
+                        </div> 
+
+                         
+
+                        ${Object.entries(PHISHING_SNIPPETS).map(([category, options]) => ` 
+
+                            <div class="snippet-category"> 
+
+                                <div class="snippet-category-title"> 
+
+                                    ${getCategoryIcon(category)} ${capitalizeFirst(category)} 
+
+                                    ${selected[category] ? '✓' : ''} 
+
+                                </div> 
+
+                                ${options.map(opt => ` 
+
+                                    <div class="snippet-option ${selected[category]?.id === opt.id ? 'selected' : ''}" 
+
+                                         onclick="selectSnippet('${category}', '${opt.id}')" 
+
+                                         tabindex="0" 
+
+                                         role="button"> 
+
+                                        ${opt.display} 
+
+                                    </div> 
+
+                                `).join('')} 
+
+                            </div> 
+
+                        `).join('')} 
+
+                    </div> 
+
+                     
+
+                    <!-- Email Preview --> 
+
+                    <div class="email-preview-container"> 
+
+                        <div class="email-toolbar"> 
+
+                            <span class="email-toolbar-btn" style="background: #ff5f57;"></span> 
+
+                            <span class="email-toolbar-btn" style="background: #febc2e;"></span> 
+
+                            <span class="email-toolbar-btn" style="background: #28c840;"></span> 
+
+                            <span style="flex: 1; text-align: center; color: #6b7280; font-size: 0.75rem;">Email Preview</span> 
+
+                        </div> 
+
+                        <div class="email-preview"> 
+
+                            <div class="email-header"> 
+
+                                <div class="email-field"> 
+
+                                    <span class="email-field-label">From:</span> 
+
+                                    <span class="email-field-value">${selected.sender?.text || '(select sender)'}</span> 
+
+                                </div> 
+
+                                <div class="email-field"> 
+
+                                    <span class="email-field-label">Subject:</span> 
+
+                                    <span class="email-field-value" style="font-weight: 600;">${selected.subject?.text || '(select subject)'}</span> 
+
+                                </div> 
+
+                            </div> 
+
+                            <div class="email-body"> 
+
+                                ${selected.body?.text?.replace(/\n/g, '<br>') || '<em style="color: #9ca3af;">(select body content)</em>'} 
+
+                                 
+
+                                ${selected.attachment ? ` 
+
+                                    <div class="email-attachment"> 
+
+                                        📎 ${selected.attachment.text} 
+
+                                    </div> 
+
+                                ` : ''} 
+
+                            </div> 
+
+                            ${trustFooterHtml}
+
+                        </div> 
+
+                    </div> 
+
+                     
+
+                    <!-- Risk Analysis --> 
+
+                    <div class="risk-analysis card"> 
+
+                        <div class="card-header"> 
+
+                            <span class="card-title">📊 Live Analysis</span> 
+
+                        </div> 
+
+                         
+
+                        ${renderRiskMetrics()} 
+
+                         
+
+                        <div style="margin-top: var(--space-md);"> 
+
+                            <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: var(--space-xs);">Heuristic Logs</div> 
+
+                            <div class="heuristic-logs" id="heuristicLogs"> 
+
+                                ${renderHeuristicLogs()} 
+
+                            </div> 
+
+                        </div> 
+
+                         
+
+                        <div style="margin-top: var(--space-lg);"> 
+
+                            <button class="btn btn-success btn-lg" style="width: 100%;" 
+
+                                    onclick="testPhishingCampaign()" 
+
+                                    ${Object.keys(selected).length < 5 ? 'disabled' : ''}> 
+
+                                🚀 Test Campaign 
+
+                            </button> 
+
+                            <p style="font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-top: var(--space-sm);"> 
+
+                                ${Object.keys(selected).length}/5 components selected 
+
+                            </p> 
+
+                        </div> 
+
+                    </div> 
+
+                </div> 
+
+                 
+
+                <div id="level2Feedback"></div> 
+
+            `; 
+
+        } 
+
+  
+
+        function getCategoryIcon(category) { 
+
+            const icons = { 
+
+                sender: '📧', 
+
+                subject: '📝', 
+
+                body: '📄', 
+
+                attachment: '📎', 
+
+                trust: '✅' 
+
+            }; 
+
+            return icons[category] || '📌'; 
+
+        } 
+
+  
+
+        function capitalizeFirst(str) { 
+
+            return str.charAt(0).toUpperCase() + str.slice(1); 
+
+        } 
+
+  
+
+        function getTrustSignalText(id) { 
+
+            const signals = { 
+
+                'footer': '© 2024 Corporate IT Security Division | Ref: SEC-2024-0892 | This message is confidential.', 
+
+                'refid': 'Ticket Reference: IT-SEC-2024-0892-URGENT | Do not share this email.', 
+
+                'signature': '— John Mitchell<br>IT Security Manager<br>john.mitchell@corp-it-update.com<br>Ext: 4521', 
+
+                'none': '' 
+
+            };
+
+            return signals[id] || ''; 
+
+        } 
+
+  
+
+        function selectSnippet(category, id) {
+            // Preserve scroll positions
+            const snippetsSidebar = document.querySelector('.snippets-sidebar');
+            const mainContent = document.getElementById('mainContent');
+            const sidebarScrollTop = snippetsSidebar ? snippetsSidebar.scrollTop : 0;
+            const mainScrollTop = mainContent ? mainContent.scrollTop : 0;
+
+            const snippet = PHISHING_SNIPPETS[category].find(s => s.id === id);
+            gameState.level2.selectedSnippets[category] = snippet;
+            renderLevel2();
+            announce(`Selected ${category}: ${snippet.display}`);
+
+            // Restore scroll positions after render
+            requestAnimationFrame(() => {
+                const newSidebar = document.querySelector('.snippets-sidebar');
+                const newMain = document.getElementById('mainContent');
+                if (newSidebar) newSidebar.scrollTop = sidebarScrollTop;
+                if (newMain) newMain.scrollTop = mainScrollTop;
+            });
+        }
+
+  
+
+        function renderRiskMetrics() { 
+
+            const selected = gameState.level2.selectedSnippets; 
+
+            const metrics = calculateRiskMetrics(selected); 
+
+             
+
+            return ` 
+
+                <div class="risk-metric"> 
+
+                    <div class="risk-metric-label">Convincability</div> 
+
+                    <div class="risk-metric-bar"> 
+
+                        <div class="risk-metric-fill" style="width: ${metrics.convincability}%; background: var(--neon-green);"></div> 
+
+                    </div> 
+
+                    <div class="risk-metric-value" style="color: var(--neon-green);">${metrics.convincability}%</div> 
+
+                </div> 
+
+                 
+
+                <div class="risk-metric"> 
+
+                    <div class="risk-metric-label">Suspicion Level</div> 
+
+                    <div class="risk-metric-bar"> 
+
+                        <div class="risk-metric-fill" style="width: ${metrics.suspicion}%; background: var(--error);"></div> 
+
+                    </div> 
+
+                    <div class="risk-metric-value" style="color: var(--error);">${metrics.suspicion}%</div> 
+
+                </div> 
+
+                 
+
+                <div class="risk-metric"> 
+
+                    <div class="risk-metric-label">Likelihood to Click</div> 
+
+                    <div class="risk-metric-bar"> 
+
+                        <div class="risk-metric-fill" style="width: ${metrics.likelihood}%; background: var(--neon-cyan);"></div> 
+
+                    </div> 
+
+                    <div class="risk-metric-value" style="color: var(--neon-cyan);">${metrics.likelihood}%</div> 
+
+                </div> 
+
+            `; 
+
+        } 
+
+  
+
+        function calculateRiskMetrics(selected) { 
+
+            let convincability = 20; 
+
+            let suspicion = 50; 
+
+             
+
+            if (selected.sender?.isCorrect) { convincability += 20; suspicion -= 10; } 
+
+            else if (selected.sender) { suspicion += 15; } 
+
+             
+
+            if (selected.subject?.isCorrect) { convincability += 15; suspicion -= 5; } 
+
+            else if (selected.subject) { suspicion += 20; } 
+
+             
+
+            if (selected.body?.isCorrect) { convincability += 25; suspicion -= 10; } 
+
+            else if (selected.body) { suspicion += 25; } 
+
+             
+
+            if (selected.attachment?.isCorrect) { convincability += 15; suspicion -= 5; } 
+
+            else if (selected.attachment) { suspicion += 20; } 
+
+             
+
+            if (selected.trust?.isCorrect) { convincability += 10; suspicion -= 5; } 
+
+            else if (selected.trust && selected.trust.id === 'none') { suspicion += 5; } 
+
+             
+
+            convincability = Math.max(0, Math.min(100, convincability)); 
+
+            suspicion = Math.max(0, Math.min(100, suspicion)); 
+
+             
+
+            const likelihood = Math.max(0, Math.min(100, (convincability * 1.2) - (suspicion * 0.5))); 
+
+             
+
+            return { convincability, suspicion, likelihood: Math.round(likelihood) }; 
+
+        } 
+
+  
+
+        function renderHeuristicLogs() { 
+
+            const selected = gameState.level2.selectedSnippets; 
+
+            const logs = []; 
+
+             
+
+            if (selected.sender) { 
+
+                if (selected.sender.isCorrect) { 
+
+                    logs.push({ type: 'success', text: '✓ Domain appears corporate' }); 
+
+                } else { 
+
+                    logs.push({ type: 'warn', text: '⚠ Domain mismatch detected - personal/foreign domain' }); 
+
+                } 
+
+            } 
+
+             
+
+            if (selected.subject) { 
+
+                if (selected.subject.isCorrect) { 
+
+                    logs.push({ type: 'success', text: '✓ Authority/urgency cues present' }); 
+
+                } else { 
+
+                    logs.push({ type: 'error', text: '✗ Subject triggers spam filters' }); 
+
+                } 
+
+            } 
+
+             
+
+            if (selected.body) { 
+
+                if (selected.body.isCorrect) { 
+
+                    logs.push({ type: 'success', text: '✓ Professional tone detected' }); 
+
+                } else { 
+
+                    logs.push({ type: 'error', text: '✗ Inconsistent tone - fails smell test' }); 
+
+                } 
+
+            } 
+
+             
+
+            if (selected.attachment) { 
+
+                if (selected.attachment.isCorrect) { 
+
+                    logs.push({ type: 'info', text: 'ℹ Attachment naming appears legitimate' }); 
+
+                } else { 
+
+                    logs.push({ type: 'error', text: '✗ Suspicious attachment naming' }); 
+
+                } 
+
+            } 
+
+             
+
+            if (selected.trust) { 
+
+                if (selected.trust.isCorrect) { 
+
+                    logs.push({ type: 'success', text: '✓ Trust signals enhance credibility' }); 
+
+                } else { 
+
+                    logs.push({ type: 'warn', text: '⚠ Missing authenticity markers' }); 
+
+                } 
+
+            } 
+
+             
+
+            if (logs.length === 0) { 
+
+                return '<div class="log-entry log-info">Waiting for component selection...</div>'; 
+
+            } 
+
+             
+
+            return logs.map(log => `<div class="log-entry log-${log.type}">${log.text}</div>`).join(''); 
+
+        } 
+
+  
+
+        function testPhishingCampaign() { 
+
+            const selected = gameState.level2.selectedSnippets; 
+
+            gameState.level2.testAttempts++; 
+
+             
+
+            // Check if all selections are correct 
+
+            const allCorrect = Object.entries(selected).every(([key, val]) => val.isCorrect); 
+
+             
+
+            if (allCorrect) { 
+
+                showModal( 
+
+                    '✓ Delivery Successful!', 
+
+                    ` 
+
+                        <div style="text-align: center; margin-bottom: var(--space-lg);"> 
+
+                            <div style="font-size: 4rem; margin-bottom: var(--space-md);">📧✓</div> 
+
+                            <h3 style="color: var(--neon-green);">Campaign Simulation Complete</h3> 
+
+                        </div> 
+
+                         
+
+                        <div class="feedback feedback-success"> 
+
+                            <span>✓</span> 
+
+                            <div> 
+
+                                <strong>Result:</strong> Email bypassed filters and appears legitimate.<br> 
+
+                                High probability of employee interaction. 
+
+                            </div> 
+
+                        </div> 
+
+                         
+
+                        <div class="feedback feedback-info"> 
+
+                            <span>📚</span> 
+
+                            <div> 
+
+                                <strong>Key Tactics Used:</strong> 
+
+                                <ul style="margin-top: 0.5rem; padding-left: 1.5rem;"> 
+
+                                    <li>${makeGlossaryTerm('Domain spoofing')}: Professional-looking fake domain</li> 
+
+                                    <li>Authority + Urgency: "IT Security" + deadline</li> 
+
+                                    <li>Legitimate attachment naming: Hides true nature</li> 
+
+                                    <li>Trust signals: Adds perceived authenticity</li> 
+
+                                </ul> 
+
+                            </div> 
+
+                        </div> 
+
+                    `, 
+
+                    `<button class="btn btn-success" onclick="closeModal(); completeLevel(2);">Continue →</button>` 
+
+                ); 
+
+            } else { 
+
+                const wrongItems = Object.entries(selected) 
+
+                    .filter(([key, val]) => !val.isCorrect) 
+
+                    .map(([key, val]) => `${capitalizeFirst(key)}: ${val.note}`); 
+
+                 
+
+                showModal( 
+
+                    '✗ Campaign Failed', 
+
+                    ` 
+
+                        <div style="text-align: center; margin-bottom: var(--space-lg);"> 
+
+                            <div style="font-size: 4rem; margin-bottom: var(--space-md);">📧✗</div> 
+
+                            <h3 style="color: var(--warning);">Email Detected or Ignored</h3> 
+
+                        </div> 
+
+                         
+
+                        <div class="feedback feedback-warning"> 
+
+                            <span>⚠️</span> 
+
+                            <div> 
+
+                                <strong>Issues Detected:</strong> 
+
+                                <ul style="margin-top: 0.5rem; padding-left: 1.5rem;"> 
+
+                                    ${wrongItems.map(item => `<li>${item}</li>`).join('')} 
+
+                                </ul> 
+
+                            </div> 
+
+                        </div> 
+
+                         
+
+                        <p style="color: var(--text-muted); margin-top: var(--space-md);"> 
+
+                            Think about what makes an email look legitimate. Consider: professional domain,  
+
+                            appropriate urgency, believable content, and hidden attachment dangers. 
+
+                        </p> 
+
+                    `, 
+
+                    `<button class="btn btn-primary" onclick="closeModal();">Try Again</button>` 
+
+                ); 
+
+            } 
+
+        } 
+
+  
+
+        // ============================================ 
+
+        // LEVEL 3: VIRTUAL DESKTOP 
+
+        // ============================================ 
+
+  
+
+        function renderLevel3() { 
+
+            if (gameState.level3.selectedAttacker.length === 0 && gameState.level3.selectedDefender.length === 0) { 
+
+                // Fresh state 
+
+            } 
+
+             
+
+            const main = document.getElementById('mainContent'); 
+
+            const attackerCount = gameState.level3.selectedAttacker.length; 
+
+            const defenderCount = gameState.level3.selectedDefender.length; 
+
+            const attackerTargets = DESKTOP_ITEMS.filter(i => i.isAttackerTarget).length; 
+
+            const defenderActions = DESKTOP_ITEMS.filter(i => i.isDefenderAction).length; 
+
+             
+
+            main.innerHTML = `
+                <div class="safety-banner">
+                    <span>⚠️</span>
+                    <span>SIMULATION - This is a conceptual exercise to understand attacker priorities and defender responses.</span>
+                </div>
+                
+                <div style="margin-bottom: var(--space-md);">
+                    <h1 style="color: var(--neon-cyan); margin-bottom: var(--space-xs);">🖥️ Level 3: Virtual Desktop</h1>
+                    <p style="color: var(--text-muted);">
+                        After a successful phishing click, the ${makeGlossaryTerm('trojan')} has established a ${makeGlossaryTerm('foothold')}.
+                        Identify what attackers target and how defenders should respond.
+                    </p>
+                </div>
+                
+                <div class="card" style="margin-bottom: var(--space-lg); background: linear-gradient(135deg, rgba(0, 240, 255, 0.1), rgba(255, 0, 128, 0.1)); border: 1px solid var(--neon-cyan);">
+                    <div style="padding: var(--space-md);">
+                        <h3 style="color: var(--neon-cyan); margin-bottom: var(--space-sm);">📋 How to Play</h3>
+                        <p style="color: var(--text-secondary); margin-bottom: var(--space-sm);">
+                            Click desktop icons to classify them. Each click cycles through:
+                        </p>
+                        <div style="display: flex; gap: var(--space-lg); flex-wrap: wrap; margin-bottom: var(--space-sm);">
+                            <span><strong style="color: var(--text-muted);">⬜ None</strong> → Click</span>
+                            <span><strong style="color: var(--neon-pink);">🔴 Attacker Target</strong> → Click</span>
+                            <span><strong style="color: var(--neon-green);">🟢 Defender Action</strong> → Click</span>
+                            <span><strong style="color: var(--text-muted);">⬜ None</strong></span>
+                        </div>
+                        <p style="font-size: 0.875rem; color: var(--text-muted);">
+                            <strong>Limits:</strong> Max <span style="color: var(--neon-pink);">3 Attacker</span> targets and <span style="color: var(--neon-green);">4 Defender</span> actions. After 3 red selections, clicks automatically add green.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="card" style="margin-bottom: var(--space-lg);">
+                    <div class="card-header">
+                        <span class="card-title">💻 Compromised Workstation</span>
+                        <span style="color: var(--text-muted);">Click icons to classify them</span>
+                    </div>
+                    
+                    <div class="desktop-container">
+                        <div class="desktop-grid">
+                            ${DESKTOP_ITEMS.map(item => {
+                                const isSelectedAttacker = gameState.level3.selectedAttacker.includes(item.id);
+                                const isSelectedDefender = gameState.level3.selectedDefender.includes(item.id);
+                                return `
+                                    <div class="desktop-icon ${isSelectedAttacker ? 'selected-attacker' : ''} ${isSelectedDefender ? 'selected-defender' : ''}"
+                                         onclick="toggleDesktopItem('${item.id}')"
+                                         tabindex="0"
+                                         role="button"
+                                         aria-label="${item.label}">
+                                        <div class="desktop-icon-img">${item.icon}</div>
+                                        <div class="desktop-icon-label">${item.label}</div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="selection-panel">
+                    <div class="selection-box" style="border-left: 3px solid var(--neon-pink);">
+                        <div class="selection-title">
+                            <span style="color: var(--neon-pink);">🎯 Attacker Targets</span>
+                            <span class="selection-count">(${attackerCount}/${attackerTargets} correct answers)</span>
+                        </div>
+                        <p style="font-size: 0.875rem; color: var(--text-muted);">
+                            What would an attacker prioritize on this desktop?
+                        </p>
+                        <div style="margin-top: var(--space-sm);">
+                            ${gameState.level3.selectedAttacker.map(id => {
+                                const item = DESKTOP_ITEMS.find(i => i.id === id);
+                                return `<span style="display: inline-block; background: rgba(255, 0, 128, 0.2); padding: 0.25rem 0.5rem; border-radius: 4px; margin: 0.25rem; font-size: 0.75rem;">${item.icon} ${item.label}</span>`;
+                            }).join('')}
+                        </div>
+                    </div>
+                    
+                    <div class="selection-box" style="border-left: 3px solid var(--neon-green);">
+                        <div class="selection-title">
+                            <span style="color: var(--neon-green);">🛡️ Defender Actions</span>
+                            <span class="selection-count">(${defenderCount}/${defenderActions} correct answers)</span>
+                        </div>
+                        <p style="font-size: 0.875rem; color: var(--text-muted);">
+                            What should a defender do immediately?
+                        </p>
+                        <div style="margin-top: var(--space-sm);">
+                            ${gameState.level3.selectedDefender.map(id => {
+                                const item = DESKTOP_ITEMS.find(i => i.id === id);
+                                return `<span style="display: inline-block; background: rgba(0, 255, 136, 0.2); padding: 0.25rem 0.5rem; border-radius: 4px; margin: 0.25rem; font-size: 0.75rem;">${item.icon} ${item.label}</span>`;
+                            }).join('')}
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: var(--space-lg); display: flex; gap: var(--space-md); justify-content: center;">
+                    <button class="btn btn-secondary" onclick="resetLevel3()">🔄 Reset Selections</button>
+                    <button class="btn btn-success btn-lg" onclick="checkLevel3()"
+                            ${attackerCount < 3 || defenderCount < 3 ? 'disabled' : ''}>
+                        ✓ Check Answers
+                    </button>
+                </div>
+                
+                <div style="text-align: center; color: var(--text-muted); margin-top: var(--space-sm); font-size: 0.875rem;">
+                    <p>Select attacker targets (max 3) and defender actions (max 4), then check your answers</p>
+                </div>
+            `;
+
+        } 
+
+  
+
+        function toggleDesktopItem(id) {
+            const maxAttacker = 3;
+            const maxDefender = 4;
+
+            const inAttacker = gameState.level3.selectedAttacker.includes(id);
+            const inDefender = gameState.level3.selectedDefender.includes(id);
+
+            // Tri-state cycle:
+            // None → Red (Attacker) → Green (Defender) → None
+            if (inDefender) {
+                // Green → None
+                gameState.level3.selectedDefender = gameState.level3.selectedDefender.filter(i => i !== id);
+                renderLevel3();
+                return;
+            }
+
+            if (inAttacker) {
+                // Red → Green (only if defender limit allows)
+                if (gameState.level3.selectedDefender.length >= maxDefender) {
+                    announce(`Defender limit reached (max ${maxDefender}).`);
+                    return;
+                }
+
+                gameState.level3.selectedAttacker = gameState.level3.selectedAttacker.filter(i => i !== id);
+                gameState.level3.selectedDefender.push(id);
+                renderLevel3();
+                return;
+            }
+
+            // None → Check if attacker limit reached
+            if (gameState.level3.selectedAttacker.length >= maxAttacker) {
+                // Auto-switch to green if defender limit allows
+                if (gameState.level3.selectedDefender.length >= maxDefender) {
+                    announce(`Both limits reached (max ${maxAttacker} red, max ${maxDefender} green).`);
+                    return;
+                }
+                gameState.level3.selectedDefender.push(id);
+                renderLevel3();
+                return;
+            }
+
+            // None → Red (normal case)
+            gameState.level3.selectedAttacker.push(id);
+            renderLevel3();
+        }
+
+
+  
+
+        function resetLevel3() { 
+
+            gameState.level3.selectedAttacker = []; 
+
+            gameState.level3.selectedDefender = []; 
+
+            renderLevel3(); 
+
+        } 
+
+  
+
+        function checkLevel3() { 
+
+            const attackerCorrect = gameState.level3.selectedAttacker.filter(id =>  
+
+                DESKTOP_ITEMS.find(i => i.id === id)?.isAttackerTarget 
+
+            ).length; 
+
+             
+
+            const defenderCorrect = gameState.level3.selectedDefender.filter(id =>  
+
+                DESKTOP_ITEMS.find(i => i.id === id)?.isDefenderAction 
+
+            ).length; 
+
+             
+
+            const totalCorrect = attackerCorrect + defenderCorrect; 
+
+            const totalPossible = DESKTOP_ITEMS.filter(i => i.isAttackerTarget || i.isDefenderAction).length; 
+
+             
+
+            if (totalCorrect >= 5) { // At least 5 out of 7 correct 
+
+                showModal( 
+
+                    '✓ Analysis Complete!', 
+
+                    ` 
+
+                        <div style="text-align: center; margin-bottom: var(--space-lg);"> 
+
+                            <div style="font-size: 3rem; margin-bottom: var(--space-md);">🖥️✓</div> 
+
+                            <h3 style="color: var(--neon-green);">Excellent Analysis!</h3> 
+
+                            <p style="color: var(--text-muted);">You correctly identified ${attackerCorrect}/3 attacker targets and ${defenderCorrect}/4 defender actions.</p> 
+
+                        </div> 
+
+                         
+
+                        <div class="feedback feedback-info"> 
+
+                            <span>📚</span> 
+
+                            <div> 
+
+                                <strong>Key Insights:</strong><br> 
+
+                                <strong>Attacker Priorities:</strong> 
+
+                                <ul style="padding-left: 1.5rem; margin: 0.5rem 0;"> 
+
+                                    ${DESKTOP_ITEMS.filter(i => i.isAttackerTarget).map(i => `<li>${i.icon} ${i.label}: ${i.explanation}</li>`).join('')} 
+
+                                </ul> 
+
+                                <strong>Defender Response:</strong> 
+
+                                <ul style="padding-left: 1.5rem; margin-top: 0.5rem;"> 
+
+                                    ${DESKTOP_ITEMS.filter(i => i.isDefenderAction).map(i => `<li>${i.icon} ${i.label}: ${i.explanation}</li>`).join('')} 
+
+                                </ul> 
+
+                            </div> 
+
+                        </div> 
+
+                    `, 
+
+                    `<button class="btn btn-success" onclick="closeModal(); completeLevel(3);">Continue →</button>` 
+
+                ); 
+
+            } else { 
+
+                const wrongAttacker = gameState.level3.selectedAttacker.filter(id =>  
+
+                    !DESKTOP_ITEMS.find(i => i.id === id)?.isAttackerTarget 
+
+                ); 
+
+                const wrongDefender = gameState.level3.selectedDefender.filter(id =>  
+
+                    !DESKTOP_ITEMS.find(i => i.id === id)?.isDefenderAction 
+
+                ); 
+
+                 
+
+                showModal( 
+
+                    '↺ Keep Thinking', 
+
+                    ` 
+
+                        <div style="text-align: center; margin-bottom: var(--space-lg);"> 
+
+                            <div style="font-size: 3rem; margin-bottom: var(--space-md);">🤔</div> 
+
+                            <h3 style="color: var(--warning);">Some Adjustments Needed</h3> 
+
+                            <p style="color: var(--text-muted);">You got ${totalCorrect}/${totalPossible} correct. Try again!</p> 
+
+                        </div> 
+
+                         
+
+                        <div class="feedback feedback-warning"> 
+
+                            <span>💡</span> 
+
+                            <div> 
+
+                                <strong>Hints:</strong><br> 
+
+                                • Attackers want <em>credentials</em> and <em>privileged access</em><br> 
+
+                                • Defenders need to <em>isolate</em>, <em>report</em>, and <em>investigate</em><br> 
+
+                                • Not every icon is a priority target or critical action 
+
+                            </div> 
+
+                        </div> 
+
+                    `, 
+
+                    `<button class="btn btn-primary" onclick="closeModal();">Try Again</button>` 
+
+                ); 
+
+            } 
+
+        } 
+
+  
+
+        // ============================================ 
+
+        // LEVEL 4: ESCALATION SEQUENCE 
+
+        // ============================================ 
+
+  
+
+        function renderLevel4() { 
+
+            if (gameState.level4.currentOrder.length === 0) { 
+
+                gameState.level4.currentOrder = shuffleArray(ESCALATION_STEPS.map(s => s.id)); 
+
+            } 
+
+             
+
+            const main = document.getElementById('mainContent'); 
+
+             
+
+            main.innerHTML = ` 
+
+                <div class="safety-banner"> 
+
+                    <span>⚠️</span> 
+
+                    <span>CONCEPTUAL ONLY - Understanding the attack sequence helps build better defenses.</span> 
+
+                </div> 
+
+                 
+
+                <div style="margin-bottom: var(--space-lg);"> 
+
+                    <h1 style="color: var(--neon-cyan); margin-bottom: var(--space-xs);">⬆️ Level 4: Escalation Sequence</h1> 
+
+                    <p style="color: var(--text-muted);"> 
+
+                        Order the ${makeGlossaryTerm('privilege escalation')} steps correctly.  
+
+                        After gaining foothold, attackers follow a pattern to expand access. 
+
+                    </p> 
+
+                </div> 
+
+                 
+
+                <div class="card" style="max-width: 600px; margin: 0 auto;"> 
+
+                    <div class="card-header"> 
+
+                        <span class="card-title">📋 Attack Sequence</span> 
+
+                        <span style="color: var(--text-muted);">Drag or use arrows to reorder</span> 
+
+                    </div> 
+
+                     
+
+                    <p style="margin-bottom: var(--space-lg); color: var(--text-secondary);"> 
+
+                        A ${makeGlossaryTerm('keylogger')} has been deployed via the ${makeGlossaryTerm('backdoor')}.  
+
+                        What's the logical order of the ${makeGlossaryTerm('exfiltration')} attack? 
+
+                    </p> 
+
+                     
+
+                    <div class="sequence-list" id="sequenceList"> 
+
+                        ${gameState.level4.currentOrder.map((stepId, index) => { 
+
+                            const step = ESCALATION_STEPS.find(s => s.id === stepId); 
+
+                            return ` 
+
+                                <div class="sequence-item"  
+
+                                     draggable="true" 
+
+                                     data-id="${stepId}" 
+
+                                     ondragstart="dragStart(event)" 
+
+                                     ondragover="dragOver(event)" 
+
+                                     ondrop="drop(event)"> 
+
+                                    <div class="sequence-number">${index + 1}</div> 
+
+                                    <div class="sequence-content"> 
+
+                                        <div class="sequence-title">${step.title}</div> 
+
+                                        <div class="sequence-desc">${step.description}</div> 
+
+                                    </div> 
+
+                                    <div class="sequence-controls"> 
+
+                                        <button class="sequence-btn" onclick="moveStep('${stepId}', -1)" ${index === 0 ? 'disabled' : ''} aria-label="Move up">↑</button> 
+
+                                        <button class="sequence-btn" onclick="moveStep('${stepId}', 1)" ${index === gameState.level4.currentOrder.length - 1 ? 'disabled' : ''} aria-label="Move down">↓</button> 
+
+                                    </div> 
+
+                                </div> 
+
+                            `; 
+
+                        }).join('')} 
+
+                    </div> 
+
+                     
+
+                    <div style="margin-top: var(--space-xl); display: flex; gap: var(--space-md); justify-content: center;"> 
+
+                        <button class="btn btn-secondary" onclick="shuffleLevel4()">🔀 Shuffle</button> 
+
+                        <button class="btn btn-success btn-lg" onclick="checkLevel4()"> 
+
+                            ✓ Check Order 
+
+                        </button> 
+
+                    </div> 
+
+                </div> 
+
+            `; 
+
+        } 
+
+  
+
+        let draggedItem = null; 
+
+  
+
+        function dragStart(e) { 
+
+            draggedItem = e.target.closest('.sequence-item'); 
+
+            draggedItem.classList.add('dragging'); 
+
+            e.dataTransfer.effectAllowed = 'move'; 
+
+        } 
+
+  
+
+        function dragOver(e) { 
+
+            e.preventDefault(); 
+
+            const target = e.target.closest('.sequence-item'); 
+
+            if (target && target !== draggedItem) { 
+
+                const rect = target.getBoundingClientRect(); 
+
+                const midY = rect.top + rect.height / 2; 
+
+                const list = document.getElementById('sequenceList'); 
+
+                 
+
+                if (e.clientY < midY) { 
+
+                    list.insertBefore(draggedItem, target); 
+
+                } else { 
+
+                    list.insertBefore(draggedItem, target.nextSibling); 
+
+                } 
+
+            } 
+
+        } 
+
+  
+
+        function drop(e) { 
+
+            e.preventDefault(); 
+
+            if (draggedItem) { 
+
+                draggedItem.classList.remove('dragging'); 
+
+                // Update state based on new DOM order 
+
+                const items = document.querySelectorAll('.sequence-item'); 
+
+                gameState.level4.currentOrder = Array.from(items).map(item => item.dataset.id); 
+
+                renderLevel4(); 
+
+            } 
+
+        } 
+
+  
+
+        function moveStep(stepId, direction) { 
+
+            const currentIndex = gameState.level4.currentOrder.indexOf(stepId); 
+
+            const newIndex = currentIndex + direction; 
+
+             
+
+            if (newIndex >= 0 && newIndex < gameState.level4.currentOrder.length) { 
+
+                const order = [...gameState.level4.currentOrder]; 
+
+                [order[currentIndex], order[newIndex]] = [order[newIndex], order[currentIndex]]; 
+
+                gameState.level4.currentOrder = order; 
+
+                renderLevel4(); 
+
+            } 
+
+        } 
+
+  
+
+        function shuffleLevel4() { 
+
+            gameState.level4.currentOrder = shuffleArray(ESCALATION_STEPS.map(s => s.id)); 
+
+            renderLevel4(); 
+
+        } 
+
+  
+
+        function checkLevel4() { 
+
+            const correctOrder = ESCALATION_STEPS.sort((a, b) => a.order - b.order).map(s => s.id); 
+
+            const isCorrect = JSON.stringify(gameState.level4.currentOrder) === JSON.stringify(correctOrder); 
+
+             
+
+            if (isCorrect) { 
+
+                showModal( 
+
+                    '✓ Sequence Correct!', 
+
+                    ` 
+
+                        <div style="text-align: center; margin-bottom: var(--space-lg);"> 
+
+                            <div style="font-size: 3rem; margin-bottom: var(--space-md);">⬆️✓</div> 
+
+                            <h3 style="color: var(--neon-green);">Perfect Sequence!</h3> 
+
+                        </div> 
+
+                         
+
+                        <div class="feedback feedback-success"> 
+
+                            <span>📚</span> 
+
+                            <div> 
+
+                                <strong>The Attack Pattern:</strong> 
+
+                                <ol style="padding-left: 1.5rem; margin-top: 0.5rem;"> 
+
+                                    <li><strong>Deploy Keylogger</strong> - Install capture mechanism</li> 
+
+                                    <li><strong>Bypass Filters</strong> - Evade ${makeGlossaryTerm('logging & monitoring')}</li> 
+
+                                    <li><strong>Capture Credentials</strong> - Wait for privileged user</li> 
+
+                                    <li><strong>Exfiltrate Data</strong> - Transfer valuable data out</li> 
+
+                                </ol> 
+
+                            </div> 
+
+                        </div> 
+
+                         
+
+                        <div class="feedback feedback-info"> 
+
+                            <span>🛡️</span> 
+
+                            <div> 
+
+                                <strong>Defense Insight:</strong><br> 
+
+                                Each stage is a detection opportunity. Endpoint monitoring can catch keyloggers,  
+
+                                behavioral analysis can spot filter bypass, MFA limits credential value,  
+
+                                and DLP can block exfiltration. 
+
+                            </div> 
+
+                        </div> 
+
+                    `, 
+
+                    `<button class="btn btn-success" onclick="closeModal(); completeLevel(4);">Continue →</button>` 
+
+                ); 
+
+            } else { 
+
+                // Find what's wrong 
+
+                let hint = ""; 
+
+                const first = gameState.level4.currentOrder[0]; 
+
+                const last = gameState.level4.currentOrder[3]; 
+
+                 
+
+                if (first !== 'e1') { 
+
+                    hint = "Hint: You need to install something before you can capture anything."; 
+
+                } else if (last !== 'e4') { 
+
+                    hint = "Hint: The final goal is to get the data out of the organization."; 
+
+                } else { 
+
+                    hint = "Hint: Think about the logical dependencies - what needs to happen before capture can occur?"; 
+
+                } 
+
+                 
+
+                showModal( 
+
+                    '↺ Not Quite Right', 
+
+                    ` 
+
+                        <div style="text-align: center; margin-bottom: var(--space-lg);"> 
+
+                            <div style="font-size: 3rem; margin-bottom: var(--space-md);">🤔</div> 
+
+                            <h3 style="color: var(--warning);">Sequence Needs Adjustment</h3> 
+
+                        </div> 
+
+                         
+
+                        <div class="feedback feedback-warning"> 
+
+                            <span>💡</span> 
+
+                            <div>${hint}</div> 
+
+                        </div> 
+
+                         
+
+                        <p style="color: var(--text-muted); margin-top: var(--space-md);"> 
+
+                            Think about cause and effect. What must happen first before the next step is possible? 
+
+                        </p> 
+
+                    `, 
+
+                    `<button class="btn btn-primary" onclick="closeModal();">Try Again</button>` 
+
+                ); 
+
+            } 
+
+        } 
+
+  
+
+        // ============================================ 
+
+        // LEVEL 5: DATA DISCOVERY 
+
+        // ============================================ 
+
+  
+
+        function renderLevel5() { 
+
+            const main = document.getElementById('mainContent'); 
+
+             
+
+            main.innerHTML = ` 
+
+                <div class="safety-banner"> 
+
+                    <span>⚠️</span> 
+
+                    <span>GOVERNANCE EXERCISE - Learn to classify data and apply appropriate controls.</span> 
+
+                </div> 
+
+                 
+
+                <div style="margin-bottom: var(--space-lg);"> 
+
+                    <h1 style="color: var(--neon-cyan); margin-bottom: var(--space-xs);">📊 Level 5: Data Discovery & Protection</h1> 
+
+                    <p style="color: var(--text-muted);"> 
+
+                        As a business manager, classify each asset by sensitivity and apply appropriate security controls. 
+
+                        Proper classification prevents ${makeGlossaryTerm('exfiltration')} and limits attack impact. 
+
+                    </p> 
+
+                </div> 
+
+                 
+
+                <div class="card" style="margin-bottom: var(--space-lg);"> 
+
+                    <div class="card-header"> 
+
+                        <span class="card-title">📋 Data Classification Matrix</span> 
+
+                    </div> 
+
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-md); margin-bottom: var(--space-md);"> 
+
+                        <div style="background: rgba(239, 68, 68, 0.1); padding: var(--space-sm); border-radius: var(--border-radius); border-left: 3px solid var(--error);"> 
+
+                            <strong style="color: var(--error);">Confidential</strong><br> 
+
+                            <small>Highly sensitive, restricted access</small> 
+
+                        </div> 
+
+                        <div style="background: rgba(245, 158, 11, 0.1); padding: var(--space-sm); border-radius: var(--border-radius); border-left: 3px solid var(--warning);"> 
+
+                            <strong style="color: var(--warning);">Internal</strong><br> 
+
+                            <small>Company-wide, not for public</small> 
+
+                        </div> 
+
+                        <div style="background: rgba(16, 185, 129, 0.1); padding: var(--space-sm); border-radius: var(--border-radius); border-left: 3px solid var(--success);"> 
+
+                            <strong style="color: var(--success);">Public</strong><br> 
+
+                            <small>Can be freely shared</small> 
+
+                        </div> 
+
+                    </div> 
+
+                </div> 
+
+                 
+
+                <div class="assets-grid"> 
+
+                    ${BUSINESS_ASSETS.map(asset => { 
+
+                        const classification = gameState.level5.classifications[asset.id] || ''; 
+
+                        const control = gameState.level5.controls[asset.id] || ''; 
+
+                        const isComplete = classification && control; 
+
+                         
+
+                        return ` 
+
+                            <div class="asset-card ${isComplete ? 'classified' : ''}"> 
+
+                                <div class="asset-icon">${asset.icon}</div> 
+
+                                <div class="asset-name">${asset.name}</div> 
+
+                                <div class="asset-desc">${asset.description}</div> 
+
+                                 
+
+                                <select class="classification-select"  
+
+                                        onchange="setClassification('${asset.id}', this.value)" 
+
+                                        aria-label="Classification for ${asset.name}"> 
+
+                                    ${CLASSIFICATION_OPTIONS.map(opt =>  
+
+                                        `<option value="${opt.value}" ${classification === opt.value ? 'selected' : ''}>${opt.label}</option>` 
+
+                                    ).join('')} 
+
+                                </select> 
+
+                                 
+
+                                <select class="controls-select" 
+                                        onchange="setControl('${asset.id}', this.value)" 
+                                        aria-label="Control for ${asset.name}"> 
+                                    ${CONTROL_OPTIONS.map(opt => 
+                                        `<option value="${opt.value}" ${control === opt.value ? 'selected' : ''} title="${opt.description}">${opt.label}${opt.description ? ' — ' + opt.description : ''}</option>`
+                                    ).join('')}
+                                </select>
+
+                                <div style="margin-top: var(--space-xs); font-size: 0.75rem; color: var(--text-muted); min-height: 1.2em;">
+                                    ${control
+                                        ? (CONTROL_OPTIONS.find(opt => opt.value === control)?.description || '')
+                                        : 'Select a control to see what it does.'}
+                                </div>
+
+                            </div> 
+
+                        `; 
+
+                    }).join('')} 
+
+                </div> 
+
+                 
+
+                <div style="margin-top: var(--space-xl); text-align: center;"> 
+
+                    <button class="btn btn-success btn-lg" onclick="checkLevel5()" 
+
+                            ${!isLevel5Complete() ? 'disabled' : ''}> 
+
+                        ✓ Submit Classification 
+
+                    </button> 
+
+                    <p style="font-size: 0.875rem; color: var(--text-muted); margin-top: var(--space-sm);"> 
+
+                        ${getLevel5Progress()} / ${BUSINESS_ASSETS.length} assets classified 
+
+                    </p> 
+
+                </div> 
+
+            `; 
+
+        } 
+
+  
+
+        function setClassification(assetId, value) { 
+
+            gameState.level5.classifications[assetId] = value; 
+
+            renderLevel5(); 
+
+        } 
+
+  
+
+        function setControl(assetId, value) { 
+
+            gameState.level5.controls[assetId] = value; 
+
+            renderLevel5(); 
+
+        } 
+
+  
+
+        function isLevel5Complete() { 
+
+            return BUSINESS_ASSETS.every(asset =>  
+
+                gameState.level5.classifications[asset.id] &&  
+
+                gameState.level5.controls[asset.id] 
+
+            ); 
+
+        } 
+
+  
+
+        function getLevel5Progress() { 
+
+            return BUSINESS_ASSETS.filter(asset =>  
+
+                gameState.level5.classifications[asset.id] &&  
+
+                gameState.level5.controls[asset.id] 
+
+            ).length; 
+
+        } 
+
+  
+
+        function checkLevel5() { 
+
+            let correctCount = 0; 
+
+            const feedback = []; 
+
+             
+
+            BUSINESS_ASSETS.forEach(asset => { 
+
+                const userClass = gameState.level5.classifications[asset.id]; 
+
+                const userControl = gameState.level5.controls[asset.id]; 
+
+                 
+
+                const classCorrect = userClass === asset.correctClass; 
+
+                const controlCorrect = asset.correctControls.includes(userControl); 
+
+                 
+
+                if (classCorrect && controlCorrect) { 
+
+                    correctCount++; 
+
+                    feedback.push({ 
+
+                        asset: asset.name, 
+
+                        icon: asset.icon, 
+
+                        status: 'correct', 
+
+                        message: 'Correctly classified and protected!' 
+
+                    }); 
+
+                } else if (classCorrect) { 
+
+                    correctCount += 0.5; 
+
+                    feedback.push({ 
+
+                        asset: asset.name, 
+
+                        icon: asset.icon, 
+
+                        status: 'partial', 
+
+                        message: `Classification correct. Better control: ${CONTROL_OPTIONS.find(c => c.value === asset.correctControls[0])?.label}` 
+
+                    }); 
+
+                } else { 
+
+                    feedback.push({ 
+
+                        asset: asset.name, 
+
+                        icon: asset.icon, 
+
+                        status: 'incorrect', 
+
+                        message: `Should be ${asset.correctClass}. Key control: ${CONTROL_OPTIONS.find(c => c.value === asset.correctControls[0])?.label}` 
+
+                    }); 
+
+                } 
+
+            }); 
+
+             
+
+            if (correctCount >= 3.5) { 
+
+                showModal( 
+
+                    '✓ Classification Complete!', 
+
+                    ` 
+
+                        <div style="text-align: center; margin-bottom: var(--space-lg);"> 
+
+                            <div style="font-size: 3rem; margin-bottom: var(--space-md);">📊✓</div> 
+
+                            <h3 style="color: var(--neon-green);">Excellent Governance!</h3> 
+
+                            <p style="color: var(--text-muted);">Score: ${Math.round(correctCount)}/${BUSINESS_ASSETS.length}</p> 
+
+                        </div> 
+
+                         
+
+                        <div style="margin-bottom: var(--space-lg);"> 
+
+                            ${feedback.map(f => ` 
+
+                                <div class="feedback feedback-${f.status === 'correct' ? 'success' : f.status === 'partial' ? 'warning' : 'info'}" style="margin-bottom: 0.5rem;"> 
+
+                                    <span>${f.icon}</span> 
+
+                                    <div><strong>${f.asset}:</strong> ${f.message}</div> 
+
+                                </div> 
+
+                            `).join('')} 
+
+                        </div> 
+
+                         
+
+                        <div class="dbm-connection"> 
+
+                            <div class="dbm-title">💼 Governance Framework</div> 
+
+                            <p>Data classification is foundational to information security. As a business manager, you should:</p> 
+
+                            <ul style="padding-left: 1.5rem; margin-top: 0.5rem;"> 
+
+                                <li>Inventory all data assets</li> 
+
+                                <li>Classify by sensitivity and regulatory requirements</li> 
+
+                                <li>Apply controls proportional to risk</li> 
+
+                                <li>Regularly audit and update classifications</li> 
+
+                            </ul> 
+
+                        </div> 
+
+                    `, 
+
+                    `<button class="btn btn-success" onclick="closeModal(); completeLevel(5);">View Certificate →</button>` 
+
+                ); 
+
+            } else { 
+
+                showModal( 
+
+                    '↺ Review Needed', 
+
+                    ` 
+
+                        <div style="text-align: center; margin-bottom: var(--space-lg);"> 
+
+                            <div style="font-size: 3rem; margin-bottom: var(--space-md);">📋</div> 
+
+                            <h3 style="color: var(--warning);">Some Classifications Need Adjustment</h3> 
+
+                            <p style="color: var(--text-muted);">Score: ${Math.round(correctCount)}/${BUSINESS_ASSETS.length}</p> 
+
+                        </div> 
+
+                         
+
+                        <div style="margin-bottom: var(--space-lg);"> 
+
+                            ${feedback.filter(f => f.status !== 'correct').slice(0, 3).map(f => ` 
+
+                                <div class="feedback feedback-warning" style="margin-bottom: 0.5rem;"> 
+
+                                    <span>${f.icon}</span> 
+
+                                    <div><strong>${f.asset}:</strong> ${f.message}</div> 
+
+                                </div> 
+
+                            `).join('')} 
+
+                        </div> 
+
+                         
+
+                        <p style="color: var(--text-muted);"> 
+
+                            <strong>Tip:</strong> Consider what damage would occur if this data was leaked.  
+
+                            Customer data and HR records need the highest protection. 
+
+                        </p> 
+
+                    `, 
+
+                    `<button class="btn btn-primary" onclick="closeModal();">Try Again</button>` 
+
+                ); 
+
+            } 
+
+        } 
+
+  
+
+        // ============================================ 
+
+        // CERTIFICATE 
+
+        // ============================================ 
+
+  
+
+        const LEVEL_SUMMARIES = {
+            1: {
+                title: "HashBreaker",
+                icon: "🔓",
+                whatYouDid: "Cracked employee passwords using a dictionary attack simulation",
+                whatYouLearned: "Weak passwords are easily guessed; attackers use common patterns and dictionary lists"
+            },
+            2: {
+                title: "Phishing Designer",
+                icon: "🎣",
+                whatYouDid: "Designed a convincing phishing email by combining social engineering elements",
+                whatYouLearned: "Phishing exploits trust, authority, and urgency to trick victims"
+            },
+            3: {
+                title: "Virtual Desktop",
+                icon: "🖥️",
+                whatYouDid: "Identified high-value attacker targets and appropriate defender responses",
+                whatYouLearned: "Attackers prioritize credentials; defenders must isolate, report, and investigate quickly"
+            },
+            4: {
+                title: "Escalation Sequence",
+                icon: "⬆️",
+                whatYouDid: "Ordered the steps of a privilege escalation attack correctly",
+                whatYouLearned: "Attacks follow a pattern: deploy, evade, capture, exfiltrate—each stage offers detection opportunities"
+            },
+            5: {
+                title: "Data Discovery",
+                icon: "📊",
+                whatYouDid: "Classified business assets by sensitivity and applied appropriate security controls",
+                whatYouLearned: "Data classification and proportional controls are foundational to information security"
+            }
+        };
+
+        function renderCertificate() {
+            const main = document.getElementById('mainContent');
+            const today = new Date().toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            
+            main.innerHTML = `
+                <div class="certificate-container">
+                    <h1 style="color: var(--neon-green); text-align: center; margin-bottom: var(--space-lg);">
+                        🎉 Congratulations, ${gameState.certificateName || 'Participant'}!
+                    </h1>
+                    
+                    <div class="outcomes-checklist card">
+                        <div class="card-header">
+                            <span class="card-title">✓ Learning Outcomes Achieved</span>
+                        </div>
+                        ${GAME_CONFIG.learningOutcomes.map(outcome => `
+                            <div class="outcome-item">
+                                <span>✓</span>
+                                <span>${outcome}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div class="card" style="margin-bottom: var(--space-lg);">
+                        <div class="card-header">
+                            <span class="card-title">📝 What You Did & Learned</span>
+                        </div>
+                        ${Object.entries(LEVEL_SUMMARIES).map(([id, level]) => `
+                            <div style="display: flex; gap: var(--space-md); padding: var(--space-md); border-bottom: 1px solid var(--bg-elevated);">
+                                <div style="font-size: 1.5rem;">${level.icon}</div>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 600; color: var(--neon-cyan); margin-bottom: var(--space-xs);">Level ${id}: ${level.title}</div>
+                                    <div style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: var(--space-xs);">
+                                        <strong>What you did:</strong> ${level.whatYouDid}
+                                    </div>
+                                    <div style="font-size: 0.875rem; color: var(--text-muted);">
+                                        <strong>What you learned:</strong> ${level.whatYouLearned}
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div style="text-align: center; margin-bottom: var(--space-lg);">
+                        <label style="display: block; margin-bottom: var(--space-sm); color: var(--text-muted);">
+                            Your name for the certificate:
+                        </label>
+                        <input type="text" 
+                               class="name-input" 
+                               id="certificateName"
+                               value="${gameState.certificateName}"
+                               placeholder="Your Name"
+                               onchange="gameState.certificateName = this.value; updateCertificatePreview();">
+                    </div>
+                    
+                    <div class="certificate-preview" id="certificatePreview">
+                        <div class="certificate-seal">🏆</div>
+                        <h1 class="certificate-title">Certificate of Completion</h1>
+                        <p class="certificate-text">This certifies that</p>
+                        <p class="certificate-name" id="certNameDisplay">${gameState.certificateName || 'Participant'}</p>
+                        <p class="certificate-text">has successfully completed the</p>
+                        <p class="certificate-text" style="font-weight: 600; color: var(--neon-cyan);">
+                            Cyber Basics (Hacker POV) Learning Game
+                        </p>
+                        <div class="certificate-status">
+                            Status: Cybersecurity Expert (Foundational)
+                        </div>
+                        <p class="certificate-date">${today}</p>
+                        <p class="certificate-disclaimer">
+                            Educational simulation — not a hacking qualification.
+                        </p>
+                    </div>
+
+                     
+
+                    <div style="text-align: center;"> 
+
+                        <button class="btn btn-success btn-lg" onclick="downloadCertificate()"> 
+
+                            📥 Download Certificate (PDF) 
+
+                        </button> 
+
+                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: var(--space-sm);"> 
+
+                            Click to open print dialog. Select "Save as PDF" as your printer. 
+
+                        </p> 
+
+                    </div> 
+
+                     
+
+                    <div style="margin-top: var(--space-xl); text-align: center;"> 
+
+                        <button class="btn btn-secondary" onclick="showIntro()"> 
+
+                            🔄 Replay Game 
+
+                        </button> 
+
+                    </div> 
+
+                </div> 
+
+            `; 
+
+        } 
+
+  
+
+        function updateCertificatePreview() { 
+
+            document.getElementById('certNameDisplay').textContent = gameState.certificateName || 'Participant'; 
+
+        } 
+
+  
+
+        function downloadCertificate() { 
+
+            const name = gameState.certificateName || 'Participant'; 
+
+            const today = new Date().toLocaleDateString('en-US', {  
+
+                year: 'numeric',  
+
+                month: 'long',  
+
+                day: 'numeric'  
+
+            }); 
+
+             
+
+            // Open certificate in new window for printing 
+
+            const printWindow = window.open('', '_blank'); 
+
+            printWindow.document.write(` 
+
+                <!DOCTYPE html> 
+
+                <html> 
+
+                <head> 
+
+                    <title>Certificate - ${name}</title> 
+
+                    <style> 
+
+                        @page {
+                            size: A4 landscape;
+                            margin: 8mm;
+                        }
+                        * {
+                            margin: 0;
+                            padding: 0;
+                            box-sizing: border-box;
+                        }
+                        html, body {
+                            width: 297mm;
+                            height: 210mm;
+                            overflow: hidden;
+                            margin: 0;
+                            padding: 0;
+                        }
+                        body {
+                            font-family: Georgia, 'Times New Roman', serif;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1a 100%);
+                        }
+                        .certificate {
+                            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+                            border: 2px solid #00f0ff;
+                            border-radius: 10px;
+                            padding: 16px 30px;
+                            text-align: center;
+                            width: 270mm;
+                            height: 185mm;
+                            box-shadow: 0 0 30px rgba(0, 240, 255, 0.3);
+                            position: relative;
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                        }
+
+                        .certificate::before {
+                            content: '';
+                            position: absolute;
+                            top: 8px;
+                            left: 8px;
+                            right: 8px;
+                            bottom: 8px;
+                            border: 1px solid rgba(0, 240, 255, 0.3);
+                            border-radius: 6px;
+                            pointer-events: none;
+                        }
+                        .seal {
+                            font-size: 32px;
+                            margin-bottom: 4px;
+                        }
+                        .title {
+                            font-size: 22px;
+                            color: #00f0ff;
+                            text-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+                            margin-bottom: 4px;
+                            letter-spacing: 1px;
+                        }
+                        .text {
+                            color: #9ca3af;
+                            font-size: 10px;
+                            margin: 3px 0;
+                        }
+                        .name {
+                            font-size: 20px;
+                            color: #00ff88;
+                            margin: 8px 0;
+                            font-weight: bold;
+                        }
+                        .course {
+                            color: #00f0ff;
+                            font-size: 12px;
+                            font-weight: 600;
+                            margin: 4px 0;
+                        }
+                        .status {
+                            display: inline-block;
+                            background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%);
+                            color: #0a0e17;
+                            padding: 6px 16px;
+                            border-radius: 5px;
+                            font-weight: 600;
+                            font-size: 10px;
+                            margin: 6px 0;
+                        }
+                        .learning-summary {
+                            margin: 8px auto;
+                            text-align: left;
+                            padding: 8px 12px;
+                            background: rgba(0, 240, 255, 0.05);
+                            border-radius: 5px;
+                            border-left: 2px solid #00f0ff;
+                            max-width: 500px;
+                        }
+                        .learning-summary h3 {
+                            color: #00f0ff;
+                            margin-bottom: 6px;
+                            font-size: 10px;
+                        }
+                        .learning-summary p {
+                            font-size: 8px;
+                            color: #9ca3af;
+                            line-height: 1.4;
+                            margin-bottom: 2px;
+                        }
+                        .learning-summary strong {
+                            color: #00ff88;
+                        }
+                        .date {
+                            color: #6b7280;
+                            font-size: 9px;
+                            margin-top: 6px;
+                        }
+                        .disclaimer {
+                            color: #4b5563;
+                            font-size: 8px;
+                            font-style: italic;
+                            margin-top: 4px;
+                        }
+
+                        @media print { 
+                            @page {
+                                size: A4 landscape;
+                                margin: 0;
+                            }
+                            html, body {
+                                width: 297mm;
+                                height: 210mm;
+                                overflow: hidden;
+                                background: white;
+                                -webkit-print-color-adjust: exact;
+                                print-color-adjust: exact;
+                            }
+
+                            body { 
+                                padding: 5mm;
+                            } 
+
+                            .certificate { 
+                                background: #f8f9fa; 
+                                border-color: #333; 
+                                box-shadow: none;
+                                width: 287mm;
+                                height: 200mm;
+                                page-break-inside: avoid;
+                                page-break-after: avoid;
+                                page-break-before: avoid;
+                            } 
+
+                            .title, .course { 
+                                color: #1a1a2e; 
+                                text-shadow: none; 
+                            } 
+
+                            .name { 
+                                color: #0f5132; 
+                            } 
+
+                            .status { 
+                                background: #333; 
+                                color: white; 
+                            }
+                            
+                            .learning-summary {
+                                background: #f0f0f0;
+                                border-left-color: #333;
+                            }
+                            .learning-summary h3 {
+                                color: #1a1a2e;
+                            }
+                            .learning-summary strong {
+                                color: #0f5132;
+                            }
+                        }
+
+                    </style> 
+
+                </head> 
+
+                <body> 
+
+                    <div class="certificate">
+                        <div class="seal">🏆</div>
+                        <h1 class="title">Certificate of Completion</h1>
+                        <p class="text">This certifies that</p>
+                        <p class="name">${name}</p>
+                        <p class="text">has successfully completed the</p>
+                        <p class="course">Cyber Basics (Hacker POV) Learning Game</p>
+                        <div class="status">Status: Cybersecurity Expert (Foundational)</div>
+                        
+                        <div class="learning-summary">
+                            <h3>What You Did & Learned:</h3>
+                            <p><strong>🔓 L1:</strong> Cracked passwords—weak passwords are dangerous</p>
+                            <p><strong>🎣 L2:</strong> Designed phishing—trust & urgency trick victims</p>
+                            <p><strong>🖥️ L3:</strong> Found targets—quick response limits damage</p>
+                            <p><strong>⬆️ L4:</strong> Ordered escalation—attack patterns offer detection opportunities</p>
+                            <p><strong>📊 L5:</strong> Classified data—proportional controls protect assets</p>
+                        </div>
+                        
+                        <p class="date">${today}</p>
+                        <p class="disclaimer">Educational simulation — not a hacking qualification.</p>
+                    </div>
+
+                    <script> 
+
+                        window.onload = function() { 
+
+                            setTimeout(function() { 
+
+                                window.print(); 
+
+                            }, 500); 
+
+                        }; 
+
+                    <\/script> 
+
+                </body> 
+
+                </html> 
+
+            `); 
+
+            printWindow.document.close(); 
+
+        } 
+
+  
+
+        // ============================================ 
+
+        // GAME CONTROL 
+
+        // ============================================ 
+
+  
+
+        function resetGame() {
+            if (confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
+                gameState = {
+                    currentLevel: 0,
+                    levelsCompleted: [],
+                    currentSlide: 0,
+                    playerName: "",
+                    level1: { employees: [], selectedEmployee: null, selectedPassword: null, crackedEmployees: [] },
+                    level2: { selectedSnippets: {}, testAttempts: 0 },
+                    level3: { selectedAttacker: [], selectedDefender: [] },
+                    level4: { currentOrder: [] },
+                    level5: { classifications: {}, controls: {} },
+                    certificateName: ""
+                };
+                updateProgress();
+                renderLevelNav();
+                showPlayerNameModal();
+                announce('Game reset. Starting from the beginning.');
+            }
+        }
+
+  
+
+        // ============================================ 
+
+        // INITIALIZATION 
+
+        // ============================================ 
+
+  
+
+        function init() {
+            updateProgress();
+            renderLevelNav();
+            showPlayerNameModal();
+        }
+
+        function showPlayerNameModal() {
+            showModal(
+                '👤 Welcome, Player!',
+                `
+                    <div style="text-align: center;">
+                        <p style="margin-bottom: var(--space-lg); color: var(--text-secondary);">
+                            Before we begin, please enter your name. This will appear on your certificate of completion!
+                        </p>
+                        <input type="text" 
+                               id="playerNameInput"
+                               class="name-input" 
+                               placeholder="Enter your name"
+                               style="margin-bottom: var(--space-md);"
+                               onkeydown="if(event.key === 'Enter') { confirmPlayerName(); }">
+                    </div>
+                `,
+                `<button class="btn btn-primary btn-lg" onclick="confirmPlayerName()">Let's Begin! →</button>`
+            );
+            // Focus the input after modal opens
+            setTimeout(() => {
+                const input = document.getElementById('playerNameInput');
+                if (input) input.focus();
+            }, 100);
+        }
+
+        function confirmPlayerName() {
+            const input = document.getElementById('playerNameInput');
+            const name = input ? input.value.trim() : '';
+            gameState.playerName = name || 'Participant';
+            gameState.certificateName = gameState.playerName;
+            closeModal();
+            showIntro();
+        }
+
+  
+
+        // Start the game when DOM is ready 
+
+        if (document.readyState === 'loading') { 
+
+            document.addEventListener('DOMContentLoaded', init); 
+
+        } else { 
+
+            init(); 
+
+        } 
+
+    </script> 
+
+</body> 
+
+</html> 
+
+ 
